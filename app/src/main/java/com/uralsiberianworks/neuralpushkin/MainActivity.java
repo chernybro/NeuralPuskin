@@ -3,6 +3,9 @@ package com.uralsiberianworks.neuralpushkin;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String URL = "http://46.17.97.44:5000/";
     private static final String TAG = "MainActivity";
-
+    private PushkinApi pushkinApi;
+    private String enteredText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,24 @@ public class MainActivity extends AppCompatActivity {
         Button mButton = findViewById(R.id.btn);
         EditText mInputTextView = findViewById(R.id.etText);
         TextView mPushkinResponseTextView = findViewById(R.id.responseText);
+
+        mInputTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                enteredText = editable.toString();
+                mButton.setEnabled(!TextUtils.isEmpty(enteredText));
+            }
+        });
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -53,17 +75,25 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        PushkinApi pushkinApi = retrofit.create(PushkinApi.class);
+        pushkinApi = retrofit.create(PushkinApi.class);
         Call<PushkinResponse> call = pushkinApi.getPushkinResponse("Привет", 1);
-        call.enqueue(new Callback<PushkinResponse>() {
-            @Override
-            public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
-                Log.d(TAG, "onResponse: " + response.code());
-            }
 
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(Call<PushkinResponse> call, Throwable t) {
-                Log.d(TAG, "onResponse: " + t.getMessage());
+            public void onClick(View view) {
+                enteredText =  mInputTextView.getText().toString();
+                Call<PushkinResponse> call = pushkinApi.getPushkinResponse(enteredText, 1);
+                call.enqueue(new Callback<PushkinResponse>() {
+                    @Override
+                    public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
+                        mPushkinResponseTextView.setText(response.body().getText());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PushkinResponse> call, Throwable t) {
+                        Log.d(TAG, "onResponse: " + t.getMessage());
+                    }
+                });
             }
         });
 
