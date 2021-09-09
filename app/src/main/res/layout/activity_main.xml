@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="48dp"
         android:fontFamily="@font/jolly_lodger"
         android:text="Neural Pushkin"
         android:textSize="56sp"
@@ -24,7 +24,7 @@
         android:id="@+id/tilText"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="24dp"
         android:textColorHint="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             android:layout_marginEnd="32dp"
             android:gravity="top"
             android:background="@drawable/rounded_shape"
-            android:hint="Введите начало фразы"
+            android:hint=" Введите начало фразы"
             android:inputType="text"
             android:textColor="@color/colorAccent"
             android:textColorHint="@color/colorAccent"
@@ -51,14 +51,28 @@
         android:layout_width="128dp"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:layout_marginVertical="61dp"
+        android:layout_marginVertical="16dp"
         android:text="Напоэтить"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/holo_orange_light"
         android:textSize="14sp"
         android:background="@drawable/button_background"
         app:layout_constraintTop_toBottomOf="@id/tilText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/responseText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/bubble"
+        android:fontFamily="@font/merriweather_italic"
+        android:text="Ответ Пушкина"
+        android:textColor="@color/labelLilac"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnAddItem" />
 
 
 
