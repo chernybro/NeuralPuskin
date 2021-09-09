@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/jolly_lodger"
         android:text="Neural Pushkin"
         android:textSize="56sp"
@@ -47,7 +47,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnAddItem"
+        android:id="@+id/btn"
         android:layout_width="128dp"
         android:layout_height="wrap_content"
         android:enabled="false"
@@ -64,17 +64,25 @@
         android:id="@+id/responseText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/bubble"
-        android:fontFamily="@font/merriweather_italic"
+        android:fontFamily="sans-serif-light"
         android:text="Ответ Пушкина"
-        android:textColor="@color/labelLilac"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAddItem" />
+        app:layout_constraintTop_toBottomOf="@id/btn" />
 
-
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="215dp"
+        android:layout_height="189dp"
+        android:layout_marginEnd="216dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/push"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
