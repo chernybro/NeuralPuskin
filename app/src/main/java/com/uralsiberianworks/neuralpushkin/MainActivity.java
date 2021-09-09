@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         pushkinApi = retrofit.create(PushkinApi.class);
-        Call<PushkinResponse> call = pushkinApi.getPushkinResponse("Привет", 1);
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
