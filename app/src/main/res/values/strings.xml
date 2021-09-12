@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NeuralPushkin</string>
+    <string name="label_text">Neural Pushkin</string>
+    <string name="enter_phrase">Введите начало фразы</string>
+    <string name="geneerate_text_btn">Напоэтить</string>
+    <string name="default_pushkin_text">здарова бандит fuck</string>
 </resources>

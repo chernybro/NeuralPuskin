@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/alegreya_sc</item>
+        <item>@font/amatic_sc</item>
         <item>@font/caveat</item>
         <item>@font/caveat_bold</item>
         <item>@font/jolly_lodger</item>
+        <item>@font/lobster</item>
+        <item>@font/lobster_two_italic</item>
         <item>@font/merriweather_italic</item>
+        <item>@font/pacifico</item>
+        <item>@font/vollkorn</item>
     </array>
 </resources>
