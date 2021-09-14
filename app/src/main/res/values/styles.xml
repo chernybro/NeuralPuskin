@@ -9,7 +9,10 @@
 
     <style name="MyMaterialTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Add attributes here -->
-        <item name="colorPrimary">@android:color/holo_red_light</item>
+        <item name="colorPrimary">@color/labelLilac</item>
     </style>
+
+
+
 
 </resources>

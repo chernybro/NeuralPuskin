@@ -1,29 +1,11 @@
 package com.uralsiberianworks.neuralpushkin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import com.uralsiberianworks.neuralpushkin.api.PushkinApi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,14 +13,28 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private PushkinApi pushkinApi;
     private String enteredText;
+    private float temp = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Button mButton = findViewById(R.id.btn);
+        setContentView(R.layout.content_main);
+
+
+        FragmentTransaction ft;
+        FragmentHolder fragmentHome = new FragmentHolder();
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.frameLayout, fragmentHome).commit();
+
+
+
+
+
+        /*Button mButton = findViewById(R.id.btn);
         EditText mInputTextView = findViewById(R.id.etText);
         TextView mPushkinResponseTextView = findViewById(R.id.responseText);
         mPushkinResponseTextView.setMovementMethod(new ScrollingMovementMethod());
+        Slider mTempSlider = findViewById(R.id.temp_slider);
+        mTempSlider.addOnChangeListener((slider, value, fromUser) -> temp = value);
 
         mInputTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
         mButton.setOnClickListener(view -> {
             enteredText =  mInputTextView.getText().toString();
-            Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, 1, 200);
+            Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, temp, 200);
             call.enqueue(new Callback<PushkinResponse>() {
                 @Override
                 public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
                     mPushkinResponseTextView.setText(response.body().getText());
+                    Log.d(TAG, "onResponse: " + response.toString());
                 }
 
                 @Override
@@ -97,6 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        pushkinApi = retrofit.create(PushkinApi.class);
+        pushkinApi = retrofit.create(PushkinApi.class); */
     }
 }
