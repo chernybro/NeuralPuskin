@@ -4,4 +4,7 @@
     <string name="enter_phrase">Введите начало фразы</string>
     <string name="geneerate_text_btn">Напоэтить</string>
     <string name="default_pushkin_text">здарова бандит fuck</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
