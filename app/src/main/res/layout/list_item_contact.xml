@@ -3,28 +3,55 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="90dp"
     android:background="@drawable/bg_item_list">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_user_photo"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/space10"
-        android:layout_marginRight="@dimen/space10"
-        android:src="@drawable/userpic"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/push5"/>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="90dp"
-        android:paddingRight="@dimen/space10"
-        android:layout_toRightOf="@+id/iv_user_photo"
+        android:paddingEnd="10dp"
+        android:layout_toEndOf="@+id/iv_user_photo"
         android:background="@drawable/bg_bottom_grey"
         android:gravity="center_vertical">
         <TextView
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Laura Owens"
-            style="@style/h2"
-            android:textAppearance="@style/Light"
+            android:text="Alexander Pushkin"
+            android:textSize="18sp"
+            android:textColor="@color/almost_white"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
+    <ImageButton
+        android:layout_width="56dp"
+        android:id="@+id/edit_btn"
+        android:textSize="12sp"
+        android:layout_height="wrap_content"
+        android:text="edit"
+        android:src="@drawable/ic_edit"
+        android:layout_marginEnd="48dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
+        android:layout_alignEnd="@id/del_btn"/>
+    <ImageButton
+        android:layout_width="72dp"
+        android:textSize="12sp"
+        android:id="@+id/del_btn"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic__delete"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="2dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dark_blue_chats_theme"
+        android:layout_gravity="bottom"/>
 </RelativeLayout>

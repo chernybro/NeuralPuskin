@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -54,7 +55,12 @@ public class MainActivity extends BaseActivity {
                 FragmentTransaction ft;
                 int id = item.getItemId();
 
-                if (id == R.id.nav_chats) {
+                if (id == R.id.nav_contacts) {
+                    FragmentContacts fragmentContacts = new FragmentContacts();
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.frameLayout, fragmentContacts).addToBackStack(null).commit();
+                }
+                else if (id == R.id.nav_chats) {
                     FragmentHolder fragmentHome = new FragmentHolder();
                     ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.frameLayout, fragmentHome).commit();
@@ -69,74 +75,35 @@ public class MainActivity extends BaseActivity {
         chats = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                 findItem(R.id.nav_chats));
 
-
-
-
-        /*Button mButton = findViewById(R.id.btn);
-        EditText mInputTextView = findViewById(R.id.etText);
-        TextView mPushkinResponseTextView = findViewById(R.id.responseText);
-        mPushkinResponseTextView.setMovementMethod(new ScrollingMovementMethod());
-        Slider mTempSlider = findViewById(R.id.temp_slider);
-        mTempSlider.addOnChangeListener((slider, value, fromUser) -> temp = value);
-
-        mInputTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                enteredText = editable.toString();
-                mButton.setEnabled(!TextUtils.isEmpty(enteredText));
-            }
-        });
-
-        configureNetwork();
-
-        mButton.setOnClickListener(view -> {
-            enteredText =  mInputTextView.getText().toString();
-            Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, temp, 200);
-            call.enqueue(new Callback<PushkinResponse>() {
-                @Override
-                public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
-                    mPushkinResponseTextView.setText(response.body().getText());
-                    Log.d(TAG, "onResponse: " + response.toString());
-                }
-
-                @Override
-                public void onFailure(Call<PushkinResponse> call, Throwable t) {
-                    Log.d(TAG, "onResponse: " + t.getMessage());
-                }
-            });
-        });
-
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    private void configureNetwork() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @NotNull
-                    @Override
-                    public Response intercept(@NotNull Chain chain) throws IOException {
-                        Request request = chain.request().newBuilder()
-                                .addHeader("Accept", "Application/JSON")
-                                .build();
-                        return chain.proceed(request);
-                    }
-                }).build();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        //noinspection SimplifiableIfStatement
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);  // OPEN DRAWER
+                return true;
+        }
 
-        pushkinApi = retrofit.create(PushkinApi.class); */
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 }
