@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main_color"
+    android:background="@color/dark_blue_chats_theme"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <RelativeLayout
         android:id="@+id/rl_bottom"
@@ -13,7 +13,7 @@
         android:paddingEnd="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:background="@color/bg_main_color"
+        android:background="@color/chat_blue"
         android:layout_alignParentBottom="true"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -23,9 +23,9 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="SEND"
-            android:textColor="@color/orange"
+            android:textColor="@color/grey"
             android:textSize="@dimen/h3"
-            android:background="@color/bg_main_color"
+            android:background="@color/chat_blue"
             android:layout_alignParentEnd="true"
             android:stateListAnimator="@null"
             android:layout_centerInParent="true"/>
@@ -40,12 +40,13 @@
                 android:id="@+id/et_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
+                android:padding="12dp"
                 android:hint="Enter your message"
                 android:maxLines="3"
                 android:textSize="@dimen/h3"
-                android:textColor="#333333"
-                android:background="@drawable/rounded_shape"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/almost_white"
+                android:background="@color/chat_blue"
                 android:inputType="textCapSentences"/>
         </RelativeLayout>
     </RelativeLayout>

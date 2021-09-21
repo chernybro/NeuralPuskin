@@ -75,7 +75,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             tvName = (TextView) itemLayoutView.findViewById(R.id.tv_user_name);
             //selectedOverlay = (View) itemView.findViewById(R.id.selected_overlay);
             tvLastChat = (TextView) itemLayoutView.findViewById(R.id.tv_last_chat);
-            userPhoto = (ImageView) itemLayoutView.findViewById(R.id.iv_user_photo);
+            userPhoto = (ImageView) itemLayoutView.findViewById(R.id.rl_photo);
 
             itemLayoutView.setOnClickListener(this);
 

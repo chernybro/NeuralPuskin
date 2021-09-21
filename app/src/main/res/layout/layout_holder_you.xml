@@ -11,10 +11,10 @@
         android:layout_alignParentLeft="true"
         android:orientation="horizontal"
         android:gravity="center_vertical">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/push"
+            android:src="@drawable/push5"
             android:layout_marginRight="10dp"/>
         <TextView
             android:id="@+id/tv_chat_text"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="Hi, joe how are you, do you like to join our party in next week because you don't like party?"
-            android:textColor="#333333"
+            android:textColor="@color/almost_white"
             android:textSize="@dimen/h3"
             android:background="@drawable/bg_chat_you"/>
     </LinearLayout>

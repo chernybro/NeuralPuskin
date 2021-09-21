@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin;
+package com.uralsiberianworks.neuralpushkin.recyclerviewChats;
 
 public class PushkinResponse {
 

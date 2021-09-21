@@ -1,5 +1,6 @@
 package com.uralsiberianworks.neuralpushkin;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,12 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHolder.ClickListener {
-
+    public static final int REQUEST_CODE = 100;
+    private static final String CHAT_ID = "chat_id";
+    private static final String LASTMESSAGE = "lastmessage";
     private RecyclerView mRecyclerView;
     private ChatAdapter mAdapter;
 
-    public FragmentHolder(){
-        setHasOptionsMenu(true);
+    public static FragmentHolder newInstance(int chatID, String lastMessage){
+        FragmentHolder fragment = new FragmentHolder();
+        Bundle bundle = new Bundle();
+        bundle.putInt(CHAT_ID, chatID);
+        bundle.putString(LASTMESSAGE, lastMessage);
+        fragment.setArguments(bundle);
+        return fragment;
+
     }
     public void onCreate(Bundle a){
         super.onCreate(a);
@@ -51,7 +60,7 @@ public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHold
         List<Chat> data = new ArrayList<>();
         String[] name = {"Alexander Pushkin", "Angela Price"};
         String[] lastMessage = {"Hi dear fan", "Would you fuck with me?"};
-        @DrawableRes int[] img = {R.drawable.push , R.drawable.userpic};
+        @DrawableRes int[] img = {R.drawable.push5 , R.drawable.userpic};
 
         for (int i = 0; i<2; i++){
             Chat chat = new Chat();
@@ -66,7 +75,7 @@ public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHold
 
     @Override
     public void onItemClicked (int position) {
-        startActivity(new Intent(getActivity(), Conversation.class));
+        startActivityForResult(new Intent(getActivity(), Conversation.class), REQUEST_CODE);
     }
 
     @Override
@@ -83,4 +92,9 @@ public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHold
     private void toggleSelection(int position) { }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

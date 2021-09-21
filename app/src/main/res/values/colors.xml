@@ -11,4 +11,16 @@
     <color name="orange">@android:color/holo_orange_light</color>
     <color name="colorTextInfo">#9b9b9b</color>
     <color name="bg_main_color">#212121</color>
+
+
+    <color name="tab_light_blue">#212d3b</color>
+    <color name="chat_blue">#1d2633</color>
+    <color name="almost_white">#fdfffc</color>
+    <color name="grey">#8b97a3</color>
+    <color name="blue_button">#5ea3de</color>
+    <color name="dark_blue_chats_theme">#151d27</color>
+
+    <color name="chat_you">#222e3a</color>
+    <color name="chat_me">#3e6189</color>
+
 </resources>

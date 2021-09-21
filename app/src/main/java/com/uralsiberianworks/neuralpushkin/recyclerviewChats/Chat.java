@@ -1,8 +1,5 @@
 package com.uralsiberianworks.neuralpushkin.recyclerviewChats;
 
-/**
- * Created by Dytstudio.
- */
 
 public class Chat {
 

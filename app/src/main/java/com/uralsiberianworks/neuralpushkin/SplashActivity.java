@@ -11,6 +11,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setContentView(R.layout.activity_splash);
         super.onCreate(savedInstanceState);
 
         new Handler().postDelayed(new Runnable() {
@@ -19,6 +20,6 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
-        }, 3*1000);
+        }, 2*1000);
     }
 }
