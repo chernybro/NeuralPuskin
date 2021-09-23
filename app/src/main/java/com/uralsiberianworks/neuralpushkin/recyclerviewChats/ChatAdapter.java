@@ -11,11 +11,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.R;
+import com.uralsiberianworks.neuralpushkin.db.Chat;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
-    private List<Chat> mArrayList;
+    private List<com.uralsiberianworks.neuralpushkin.db.Chat> mArrayList;
     private Context mContext;
     private ChatViewHolder.ClickListener clickListener;
 
@@ -26,6 +27,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         this.mContext = context;
         this.clickListener = clickListener;
 
+    }
+
+    public void updateLastMessage(List<Chat> arrayList) {
+        this.mArrayList = arrayList;
+        notifyDataSetChanged();
     }
 
 
@@ -44,10 +50,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public void onBindViewHolder(ChatViewHolder viewHolder, int position) {
 
-        viewHolder.tvName.setText(mArrayList.get(position).getName());
+        viewHolder.tvName.setText(mArrayList.get(position).getSender());
         viewHolder.userPhoto.setImageResource(mArrayList.get(position).getImage());
-
-        viewHolder.tvLastChat.setText(mArrayList.get(position).getLastChat());
+        viewHolder.tvLastChat.setText(mArrayList.get(position).getLastMessage());
     }
 
     @Override
@@ -59,10 +64,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public static class ChatViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener,View.OnLongClickListener  {
 
         public TextView tvName;
-        public TextView tvTime;
         public TextView tvLastChat;
         public ImageView userPhoto;
-        public boolean online = false;
         private ClickListener listener;
         //private final View selectedOverlay;
 
@@ -87,6 +90,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             if (listener != null) {
                 listener.onItemClicked(getAdapterPosition ());
             }
+
         }
         @Override
         public boolean onLongClick (View view) {

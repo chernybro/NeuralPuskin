@@ -1,6 +1,7 @@
 package com.uralsiberianworks.neuralpushkin;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,12 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.api.PushkinApi;
+import com.uralsiberianworks.neuralpushkin.db.Chat;
+import com.uralsiberianworks.neuralpushkin.db.ChatDao;
+import com.uralsiberianworks.neuralpushkin.db.Contact;
+import com.uralsiberianworks.neuralpushkin.db.ContactDao;
+import com.uralsiberianworks.neuralpushkin.db.Message;
+import com.uralsiberianworks.neuralpushkin.db.MessageDao;
+import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
 import com.uralsiberianworks.neuralpushkin.recyclerConversation.ChatData;
 import com.uralsiberianworks.neuralpushkin.recyclerConversation.ConversationRecyclerView;
 import com.uralsiberianworks.neuralpushkin.recyclerviewChats.PushkinResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,7 +37,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Conversation extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ConversationRecyclerView mAdapter;
-    private EditText text;
+    private EditText mText;
+    private NeuralDatabase db;
+    private MessageDao messageDao;
+    private ContactDao contactDao;
+    private ChatDao chatDao;
+    Bundle arguments;
 
     public static final String URL = "http://46.17.97.44:5000";
     private static final String TAG = "Conversation";
@@ -39,63 +53,91 @@ public class Conversation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_conversation);
+        db = ((NeuralApp)getApplication()).getDb();
+        messageDao = db.getMessageDao();
+        contactDao = db.getContactDao();
+        chatDao = db.getChatDao();
+
+        Bundle arguments = getIntent().getExtras();
+        String id = arguments.get("chat_id").toString();
+
+        Contact contact = contactDao.getContact(id);
+        int recipientImage = contact.getImage();
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new ConversationRecyclerView(setChatData());
+        mAdapter = new ConversationRecyclerView(setChatData(id), recipientImage);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(mRecyclerView.getAdapter().getItemCount()>=1)
                 mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
             }
         }, 1000);
 
-        text = (EditText) findViewById(R.id.et_message);
-        text.setOnClickListener(view -> mRecyclerView.postDelayed(new Runnable() {
+        mText = (EditText) findViewById(R.id.et_message);
+        mText.setOnClickListener(view -> mRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(mRecyclerView.getAdapter().getItemCount()>=1)
                 mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
             }
         }, 500));
         Button send = (Button) findViewById(R.id.bt_send);
         send.setOnClickListener(view -> {
-            if (!text.getText().equals("")){
-                List<ChatData> data = new ArrayList<ChatData>();
-                ChatData userData = new ChatData();
-                userData.setType("2");
-                String enteredText = text.getText().toString();
-                userData.setText(enteredText);
-                data.add(userData);
-                mAdapter.addItem(data);
-                data.clear();
-                mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() -1);
+            if (!mText.getText().equals("")) {
+                List<Message> data = new ArrayList<>();
+                Message message = new Message();
+                message.setType("2");
+                message.setChatID(id);
+                message.setMessageID(String.valueOf(UUID.randomUUID()));
+                String enteredText = mText.getText().toString();
+                if (!TextUtils.isEmpty(enteredText)) {
+                    message.setText(enteredText);
 
-                configureNetwork();
+                    data.add(message);
+                    mAdapter.addItem(data);
+                    messageDao.insert(message);
+                    Chat chat = chatDao.getChatFromID(id);
+                    chat.setLastMessage(message.getText());
+                    chatDao.update(chat);
+                    data.clear();
+                    mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
 
-                Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, temp, 200);
-                call.enqueue(new Callback<PushkinResponse>() {
-                    @Override
-                    public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
-                        ChatData recipientData = new ChatData();
-                        recipientData.setType("1");
-                        String responseText = response.body().getText();
-                        recipientData.setText(responseText);
-                        data.add(recipientData);
-                        mAdapter.addItem(data);
-                        mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() -1);
-                        Log.d(TAG, "onResponse: " + response.toString());
-                    }
+                    configureNetwork();
 
-                    @Override
-                    public void onFailure(Call<PushkinResponse> call, Throwable t) {
-                        Log.d(TAG, "onResponse: " + t.getMessage());
-                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, temp, 120);
+                    call.enqueue(new Callback<PushkinResponse>() {
+                        @Override
+                        public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
+                            Message message1 = new Message();
+                            message1.setType("1");
+                            String responseText = response.body().getText();
+                            message1.setText(responseText);
+                            message1.setChatID(id);
+                            message1.setMessageID(String.valueOf(UUID.randomUUID()));
+                            data.add(message1);
+                            Chat chat = chatDao.getChatFromID(id);
+                            chat.setLastMessage(message1.getText());
+                            chatDao.update(chat);
+                            mAdapter.addItem(data);
+                            messageDao.insert(message1);
+                            mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
+                            Log.d(TAG, "onResponse: " + response.toString());
 
-                text.setText("");
+                        }
+
+                        @Override
+                        public void onFailure(Call<PushkinResponse> call, Throwable t) {
+                            Log.d(TAG, "onResponse: " + t.getMessage());
+                            Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    mText.setText("");
+                }
             }
         });
     }
@@ -118,20 +160,13 @@ public class Conversation extends AppCompatActivity {
         pushkinApi = retrofit.create(PushkinApi.class);
     }
 
-    public List<ChatData> setChatData(){
-        List<ChatData> data = new ArrayList<>();
-
-        String text[] = {"What's up, bitches?"};
-        String type[] = {"1"};
-
-        for (int i=0; i<text.length; i++){
-            ChatData item = new ChatData();
-            item.setType(type[i]);
-            item.setText(text[i]);
-            data.add(item);
-        }
-
-        return data;
+    public List<Message> setChatData(String id){
+        List<Message> databaseMessages = messageDao.getAllMessages(id);
+        return databaseMessages;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

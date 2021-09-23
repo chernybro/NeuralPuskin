@@ -6,6 +6,7 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.Room;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.uralsiberianworks.neuralpushkin.api.PushkinApi;
+import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
 
 public class MainActivity extends BaseActivity {
 
@@ -24,10 +26,13 @@ public class MainActivity extends BaseActivity {
     NavigationView navigationView, navigationViewBottom;
     DrawerLayout drawer;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         setupToolbar(R.id.toolbar, "Messages");
         toolbar = findViewById(R.id.toolbar);
@@ -46,6 +51,7 @@ public class MainActivity extends BaseActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

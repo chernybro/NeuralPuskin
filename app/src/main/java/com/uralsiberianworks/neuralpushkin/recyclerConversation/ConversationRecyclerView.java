@@ -4,23 +4,27 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.R;
+import com.uralsiberianworks.neuralpushkin.db.Message;
 
 import java.util.List;
 
 public class ConversationRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // The items to display in your RecyclerView
-    private List<ChatData> items;
+    private List<Message> items;
+    int recipientImage;
 
     private final int YOU = 1, ME = 2;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ConversationRecyclerView(List<ChatData> items) {
+    public ConversationRecyclerView(List<Message> items, int recipientImage) {
         this.items = items;
+        this.recipientImage = recipientImage;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -48,6 +52,8 @@ public class ConversationRecyclerView extends RecyclerView.Adapter<RecyclerView.
         switch (viewType) {
             case YOU:
                 View v2 = inflater.inflate(R.layout.layout_holder_you, viewGroup, false);
+                ImageView imageView = v2.findViewById(R.id.recipient_img);
+                imageView.setImageResource(recipientImage);
                 viewHolder = new HolderYou(v2);
                 break;
             default:
@@ -57,7 +63,7 @@ public class ConversationRecyclerView extends RecyclerView.Adapter<RecyclerView.
         }
         return viewHolder;
     }
-    public void addItem(List<ChatData> item) {
+    public void addItem(List<Message> item) {
         items.addAll(item);
         notifyDataSetChanged();
     }

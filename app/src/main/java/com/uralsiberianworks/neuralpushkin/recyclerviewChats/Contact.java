@@ -3,10 +3,6 @@ package com.uralsiberianworks.neuralpushkin.recyclerviewChats;
 
 import androidx.annotation.DrawableRes;
 
-/**
- * Created by Dytstudio.
- */
-
 public class Contact {
     String name;
     int image;

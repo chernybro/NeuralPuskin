@@ -3,6 +3,7 @@ package com.uralsiberianworks.neuralpushkin;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,19 +18,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-import com.uralsiberianworks.neuralpushkin.recyclerviewChats.Chat;
+import com.uralsiberianworks.neuralpushkin.db.Chat;
+import com.uralsiberianworks.neuralpushkin.db.ChatDao;
+import com.uralsiberianworks.neuralpushkin.db.Contact;
+import com.uralsiberianworks.neuralpushkin.db.ContactDao;
+import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
+import com.uralsiberianworks.neuralpushkin.recyclerConversation.ChatData;
 import com.uralsiberianworks.neuralpushkin.recyclerviewChats.ChatAdapter;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHolder.ClickListener {
     public static final int REQUEST_CODE = 100;
     private static final String CHAT_ID = "chat_id";
+    private static final String POSITION = "position";
     private static final String LASTMESSAGE = "lastmessage";
     private RecyclerView mRecyclerView;
     private ChatAdapter mAdapter;
+    ChatDao chatDao;
+    ContactDao contactDao;
+    NeuralDatabase db;
+    private static boolean initialBotCreated = false;
+    private List<Chat> dataList;
+    int clickedPosition;
 
     public static FragmentHolder newInstance(int chatID, String lastMessage){
         FragmentHolder fragment = new FragmentHolder();
@@ -42,13 +58,17 @@ public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHold
     }
     public void onCreate(Bundle a){
         super.onCreate(a);
+        db = ((NeuralApp)getActivity().getApplication()).getDb();
+        contactDao = db.getContactDao();
+        chatDao = db.getChatDao();
+
         setHasOptionsMenu(true);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chats_recycler, null, false);
 
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -58,32 +78,52 @@ public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHold
 
         return view;
     }
-    public List<Chat> setData(){
-        List<Chat> data = new ArrayList<>();
-        String[] name = {"Alexander Pushkin", "Angela Price"};
-        String[] lastMessage = {"Hi dear fan", "Would you fuck with me?"};
-        @DrawableRes int[] img = {R.drawable.push5 , R.drawable.userpic};
-
-        for (int i = 0; i<2; i++){
-            Chat chat = new Chat();
-            chat.setTime("5:04pm");
-            chat.setName(name[i]);
-            chat.setImage(img[i]);
-            chat.setLastChat(lastMessage[i]);
-            data.add(chat);
+    public List<Chat> setData() {
+        if (initialBotCreated) {
+            return dataList = chatDao.getAllChats();
         }
-        return data;
+        else if(!contactDao.getAllContacts().contains(new Contact("push","Alexander Pushkin",R.drawable.push5))){
+            Contact pushkinContact = new Contact();
+            //String pushkinID = UUID.randomUUID().toString();
+            String s = "push";
+            pushkinContact.setContactID(s);
+            pushkinContact.setImage(R.drawable.push5);
+            pushkinContact.setName("Alexander Pushkin");
+            contactDao.insert(pushkinContact);
+
+            Chat pushkinChat = new Chat();
+            pushkinChat.setChatID(pushkinContact.getContactID());
+            pushkinChat.setImage(pushkinContact.getImage());
+            pushkinChat.setLastMessage("Hi dear fan");
+            pushkinChat.setSender(pushkinContact.getName());
+
+            chatDao.insert(pushkinChat);
+            initialBotCreated = true;
+            return dataList = chatDao.getAllChats();
+        }
+        return dataList = chatDao.getAllChats();
     }
 
     @Override
     public void onItemClicked (int position) {
-        startActivityForResult(new Intent(getActivity(), Conversation.class), REQUEST_CODE);
+        clickedPosition = position;
+        Intent intent = new Intent(getActivity(), Conversation.class);
+        String id = dataList.get(position).getChatID();
+        intent.putExtra(CHAT_ID, id);
+        intent.putExtra("position", position);
+        startActivity(intent);
     }
 
     @Override
     public boolean onItemLongClicked (int position) {
         toggleSelection(position);
         return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAdapter.updateLastMessage(chatDao.getAllChats());
     }
 
     @Override
@@ -94,9 +134,4 @@ public class FragmentHolder extends Fragment implements ChatAdapter.ChatViewHold
     private void toggleSelection(int position) { }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }

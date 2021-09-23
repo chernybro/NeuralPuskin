@@ -1,11 +1,11 @@
 package com.uralsiberianworks.neuralpushkin.recyclerConversation;
 
-/**
- * Created by Dytstudio.
- */
+
+import androidx.annotation.DrawableRes;
 
 public class ChatData {
-    String type, text, time;
+    String type, text;
+    @DrawableRes int image;
 
     public String getText() {
         return text;
@@ -23,11 +23,11 @@ public class ChatData {
         this.type = type;
     }
 
-    public String getTime() {
-        return time;
+    public int getImage() {
+        return image;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setImage(int image) {
+        this.image = image;
     }
 }

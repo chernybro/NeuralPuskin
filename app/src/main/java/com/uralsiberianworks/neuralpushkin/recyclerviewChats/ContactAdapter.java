@@ -15,9 +15,6 @@ import com.uralsiberianworks.neuralpushkin.R;
 
 import java.util.List;
 
-/**
- * Created by Dytstudio.
- */
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
