@@ -1,6 +1,11 @@
 package com.uralsiberianworks.neuralpushkin.recyclerConversation;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +93,11 @@ public class ConversationRecyclerView extends RecyclerView.Adapter<RecyclerView.
 
     private void configureViewHolder2(HolderYou vh1, int position) {
         //vh1.getTime().setText(items.get(position).getTime());
-        vh1.getChatText().setText(items.get(position).getText());
+        //vh1.getChatText().setText(items.get(position).getText());
+        final SpannableStringBuilder sb = new SpannableStringBuilder(items.get(position).getText());
+        final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(158, 158, 158));
+        int colorLength = items.get(position).getInitialLength();
+        sb.setSpan(fcs, 0, colorLength, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        vh1.getChatText().setText(sb);
     }
 }

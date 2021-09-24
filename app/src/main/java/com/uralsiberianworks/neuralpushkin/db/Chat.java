@@ -6,8 +6,6 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import java.util.List;
-import java.util.UUID;
 
 @Entity(foreignKeys = @ForeignKey(
         entity = Contact.class,
@@ -19,6 +17,7 @@ public class Chat {
     String sender;
     String lastMessage;
     @DrawableRes int image;
+
 
     public void setChatID(String chatID) { this.chatID = chatID; }
 

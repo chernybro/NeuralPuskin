@@ -92,11 +92,12 @@ public class Conversation extends AppCompatActivity {
                 Message message = new Message();
                 message.setType("2");
                 message.setChatID(id);
+
                 message.setMessageID(String.valueOf(UUID.randomUUID()));
                 String enteredText = mText.getText().toString();
                 if (!TextUtils.isEmpty(enteredText)) {
                     message.setText(enteredText);
-
+                    message.setInitialLength(enteredText.length());
                     data.add(message);
                     mAdapter.addItem(data);
                     messageDao.insert(message);
@@ -118,6 +119,7 @@ public class Conversation extends AppCompatActivity {
                             message1.setText(responseText);
                             message1.setChatID(id);
                             message1.setMessageID(String.valueOf(UUID.randomUUID()));
+                            message1.setInitialLength(enteredText.length());
                             data.add(message1);
                             Chat chat = chatDao.getChatFromID(id);
                             chat.setLastMessage(message1.getText());
@@ -131,6 +133,20 @@ public class Conversation extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<PushkinResponse> call, Throwable t) {
+                            /*Message message1 = new Message();
+                            message1.setType("1");
+                            String responseText = "Привет! Это мой дефолтный ответ";
+                            message1.setText(responseText);
+                            message1.setChatID(id);
+                            message1.setMessageID(String.valueOf(UUID.randomUUID()));
+                            message1.setInitialLength(enteredText.length());
+                            data.add(message1);
+                            Chat chat = chatDao.getChatFromID(id);
+                            chat.setLastMessage(message1.getText());
+                            chatDao.update(chat);
+                            mAdapter.addItem(data);
+                            messageDao.insert(message1);
+                            mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);*/
                             Log.d(TAG, "onResponse: " + t.getMessage());
                             Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -161,8 +177,7 @@ public class Conversation extends AppCompatActivity {
     }
 
     public List<Message> setChatData(String id){
-        List<Message> databaseMessages = messageDao.getAllMessages(id);
-        return databaseMessages;
+        return messageDao.getAllMessages(id);
     }
 
     @Override

@@ -26,7 +26,5 @@ public class HolderYou extends RecyclerView.ViewHolder {
         return chatText;
     }
 
-    public void setChatText(TextView chatText) {
-        this.chatText = chatText;
-    }
+    public void setChatText(TextView chatText) {this.chatText = chatText; }
 }

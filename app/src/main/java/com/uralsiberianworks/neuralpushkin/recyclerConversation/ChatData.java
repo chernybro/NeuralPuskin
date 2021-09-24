@@ -23,11 +23,7 @@ public class ChatData {
         this.type = type;
     }
 
-    public int getImage() {
-        return image;
-    }
+    public int getImage() { return image; }
 
-    public void setImage(int image) {
-        this.image = image;
-    }
+    public void setImage(int image) { this.image = image; }
 }

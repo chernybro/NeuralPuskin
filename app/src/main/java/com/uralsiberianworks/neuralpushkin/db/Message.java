@@ -16,6 +16,7 @@ public class Message {
     String text;
     String chatID;
     String type;
+    private int initialLength;
 
     public String getMessageID() {
         return messageID;
@@ -40,4 +41,8 @@ public class Message {
     public String getType() { return type; }
 
     public void setType(String type) { this.type = type; }
+
+    public int getInitialLength() { return initialLength; }
+
+    public void setInitialLength(int initialLength) { this.initialLength = initialLength; }
 }
