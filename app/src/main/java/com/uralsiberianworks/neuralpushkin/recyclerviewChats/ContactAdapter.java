@@ -31,17 +31,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     private List<com.uralsiberianworks.neuralpushkin.db.Contact> mArrayList;
     private Context mContext;
-    private ContactAdapter.ViewHolder.ClickListener clickListener;
     private static final String CONTACT_DEL = "contact_del";
     private static final String CONTACT_EDIT = "contact_edit";
 
 
 
 
-    public ContactAdapter (Context context, List<com.uralsiberianworks.neuralpushkin.db.Contact> arrayList, ContactAdapter.ViewHolder.ClickListener clickListener) {
+    public ContactAdapter (Context context, List<com.uralsiberianworks.neuralpushkin.db.Contact> arrayList) {
         this.mArrayList = arrayList;
         this.mContext = context;
-        this.clickListener = clickListener;
 
     }
 
@@ -58,7 +56,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.list_item_contact, null);
 
-        ContactAdapter.ViewHolder viewHolder = new ContactAdapter.ViewHolder(itemLayoutView,clickListener);
+        ContactAdapter.ViewHolder viewHolder = new ContactAdapter.ViewHolder(itemLayoutView);
 
         return viewHolder;
     }
@@ -120,50 +118,21 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return mArrayList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener, View.OnLongClickListener  {
+    public static class ViewHolder extends RecyclerView.ViewHolder  {
 
         public TextView tvName;
         public ImageView userPhoto;
-        private ContactAdapter.ViewHolder.ClickListener listener;
         private ImageButton editBtn;
         private ImageButton delBtn;
 
 
-        public ViewHolder(View itemLayoutView, ContactAdapter.ViewHolder.ClickListener listener) {
+        public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-
-            this.listener = listener;
 
             tvName = itemLayoutView.findViewById(R.id.tv_user_name);
             userPhoto = itemLayoutView.findViewById(R.id.iv_user_photo);
             editBtn = itemLayoutView.findViewById(R.id.edit_btn);
             delBtn = itemLayoutView.findViewById(R.id.del_btn);
-
-            itemLayoutView.setOnClickListener(this);
-
-            itemLayoutView.setOnLongClickListener (this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (listener != null) {
-                listener.onItemClicked(getAdapterPosition ());
-            }
-        }
-        @Override
-        public boolean onLongClick (View view) {
-            if (listener != null) {
-                return listener.onItemLongClicked(getAdapterPosition ());
-            }
-            return false;
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-
-            boolean onItemLongClicked(int position);
-
-            boolean onCreateOptionsMenu(Menu menu);
         }
     }
 }

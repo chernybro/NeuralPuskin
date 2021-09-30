@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="4dp">
+        <TextView
+            android:id="@+id/tv_chat_text"
+            android:maxWidth="@dimen/maxwidth"
+            android:textIsSelectable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Hi, joe how are you, do you like to join our party in next week because you don't like party?"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/h3"
+            android:background="@color/dark_blue_chats_theme"/>
+</RelativeLayout>

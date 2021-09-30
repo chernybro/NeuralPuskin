@@ -109,13 +109,15 @@ public class Conversation extends AppCompatActivity {
 
                 configureNetwork();
 
-                setBotMessage(data, id, enteredText);
+                Message message = setTypingMessage(data, id);
+
+                setBotMessage(data, id, enteredText, message);
 
             }
         });
     }
 
-    private void setBotMessage(List<Message> data, String id, String enteredText) {
+    private void setBotMessage(List<Message> data, String id, String enteredText, Message typingMessage) {
         Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, temp, 120);
         call.enqueue(new Callback<PushkinResponse>() {
             @Override
@@ -133,6 +135,8 @@ public class Conversation extends AppCompatActivity {
                 chatDao.update(chat);
                 mAdapter.addItem(data);
                 messageDao.insert(message1);
+                mAdapter.delItem(typingMessage);
+                messageDao.delete(typingMessage);
                 mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
                 Log.d(TAG, "onResponse: " + response.toString());
 
@@ -154,6 +158,8 @@ public class Conversation extends AppCompatActivity {
                             mAdapter.addItem(data);
                             messageDao.insert(message1);
                             mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);*/
+                mAdapter.delItem(typingMessage);
+                messageDao.delete(typingMessage);
                 Log.d(TAG, "onResponse: " + t.getMessage());
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -184,6 +190,23 @@ public class Conversation extends AppCompatActivity {
             return enteredText;
         }
         return "";
+    }
+
+    private Message setTypingMessage(List<Message> data, String id) {
+        Message message = new Message();
+        message.setType("3");
+        message.setChatID(id);
+        String typingMessageID = String.valueOf(UUID.randomUUID());
+        message.setMessageID(typingMessageID);
+
+        message.setText(contactDao.getContact(id).getName() + " typing...");
+        message.setInitialLength(0);
+        data.add(message);
+        mAdapter.addItem(data);
+        messageDao.insert(message);
+        data.clear();
+        mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
+        return message;
     }
 
     @Override

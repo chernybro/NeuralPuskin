@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class FragmentContacts extends Fragment implements ContactAdapter.ViewHolder.ClickListener{
+public class FragmentContacts extends Fragment {
 
     private RecyclerView mRecyclerView;
     private ContactAdapter mAdapter;
@@ -60,7 +60,7 @@ public class FragmentContacts extends Fragment implements ContactAdapter.ViewHol
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ContactAdapter(getContext(),setData(),this);
+        mAdapter = new ContactAdapter(getContext(),setData());
         mRecyclerView.setAdapter (mAdapter);
 
 
@@ -78,21 +78,6 @@ public class FragmentContacts extends Fragment implements ContactAdapter.ViewHol
     public void onStart() {
         super.onStart();
         mAdapter.update(contactDao.getAllContacts());
-    }
-
-    @Override
-    public void onItemClicked (int position) {
-
-    }
-
-    @Override
-    public boolean onItemLongClicked (int position) {
-        return true;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
     }
 
 
