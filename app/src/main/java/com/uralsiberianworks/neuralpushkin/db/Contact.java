@@ -11,14 +11,14 @@ import java.util.Objects;
 @Entity
 public class Contact {
     @PrimaryKey @NonNull
-    String contactID;
-    String name;
-    @DrawableRes int image;
+    private String contactID;
+    private String name;
+    private String imagePath;
 
-    public Contact(@NonNull String contactID, String name, int image) {
+    public Contact(@NonNull String contactID, String name, String imagePath) {
         this.contactID = contactID;
         this.name = name;
-        this.image = image;
+        this.imagePath = imagePath;
     }
 
     public Contact() {
@@ -41,14 +41,12 @@ public class Contact {
         this.name = name;
     }
 
+    public String getImagePath() { return imagePath; }
 
-    public int getImage() {
-        return image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
-    public void setImage(int image) {
-        this.image = image;
-    }
 
 
     @Override
@@ -61,6 +59,6 @@ public class Contact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(contactID, name, image);
+        return Objects.hash(contactID, name, imagePath);
     }
 }

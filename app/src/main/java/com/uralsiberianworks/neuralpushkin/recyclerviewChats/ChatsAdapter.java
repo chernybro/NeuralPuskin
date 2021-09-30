@@ -1,28 +1,34 @@
 package com.uralsiberianworks.neuralpushkin.recyclerviewChats;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.uralsiberianworks.neuralpushkin.AddContactActivity;
 import com.uralsiberianworks.neuralpushkin.R;
 import com.uralsiberianworks.neuralpushkin.db.Chat;
 
+import java.io.File;
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
+public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHolder> {
     private List<com.uralsiberianworks.neuralpushkin.db.Chat> mArrayList;
     private Context mContext;
     private ChatViewHolder.ClickListener clickListener;
 
 
 
-    public ChatAdapter (Context context, List<Chat> arrayList, ChatViewHolder.ClickListener clickListener) {
+    public ChatsAdapter(Context context, List<Chat> arrayList, ChatViewHolder.ClickListener clickListener) {
         this.mArrayList = arrayList;
         this.mContext = context;
         this.clickListener = clickListener;
@@ -51,8 +57,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(ChatViewHolder viewHolder, int position) {
 
         viewHolder.tvName.setText(mArrayList.get(position).getSender());
-        viewHolder.userPhoto.setImageResource(mArrayList.get(position).getImage());
+        String recipientImagePath = mArrayList.get(position).getImagePath();
+        File imgFile = new File(recipientImagePath);
+
+        if(imgFile.exists()){
+
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+            viewHolder.userPhoto.setImageBitmap(myBitmap);
+        }
         viewHolder.tvLastChat.setText(mArrayList.get(position).getLastMessage());
+
+
+
     }
 
     @Override
@@ -67,6 +84,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         public TextView tvLastChat;
         public ImageView userPhoto;
         private ClickListener listener;
+
         //private final View selectedOverlay;
 
 
@@ -76,9 +94,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             this.listener = listener;
 
             tvName = (TextView) itemLayoutView.findViewById(R.id.tv_user_name);
-            //selectedOverlay = (View) itemView.findViewById(R.id.selected_overlay);
             tvLastChat = (TextView) itemLayoutView.findViewById(R.id.tv_last_chat);
             userPhoto = (ImageView) itemLayoutView.findViewById(R.id.rl_photo);
+
+
 
             itemLayoutView.setOnClickListener(this);
 
@@ -101,9 +120,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
 
         public interface ClickListener {
-            public void onItemClicked(int position);
+            void onItemClicked(int position);
 
-            public boolean onItemLongClicked(int position);
+            boolean onItemLongClicked(int position);
 
             boolean onCreateOptionsMenu(Menu menu);
         }

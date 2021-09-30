@@ -24,9 +24,19 @@
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/menu_drawer"
             android:background="@color/tab_light_blue"
-            app:itemIconTint="#80FFFFFF"
+            app:itemIconTint="#FFFFFF"
             app:itemTextColor="#80FFFFFF"
             android:layout_gravity="top"/>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/chat_blue"
+            app:itemTextColor="@color/grey"
+            app:itemIconTint="@color/almost_white"
+            app:menu="@menu/menu_drawer_bottom"
+            android:layout_gravity="bottom"/>
 
     </com.google.android.material.navigation.NavigationView>
 

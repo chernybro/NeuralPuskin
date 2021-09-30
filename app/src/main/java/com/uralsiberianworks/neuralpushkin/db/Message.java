@@ -6,10 +6,12 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 @Entity(foreignKeys = @ForeignKey(
         entity = Chat.class,
         parentColumns = "chatID",
-        childColumns = "chatID"))
+        childColumns = "chatID", onDelete = CASCADE))
 public class Message {
     @PrimaryKey @NonNull
     String messageID;

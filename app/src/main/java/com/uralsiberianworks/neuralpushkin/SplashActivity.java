@@ -6,9 +6,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -20,6 +18,6 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();
-        }, 500);
+        }, 300);
     }
 }

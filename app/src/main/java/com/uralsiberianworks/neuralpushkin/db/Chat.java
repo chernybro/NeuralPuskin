@@ -6,18 +6,21 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.List;
+import java.util.UUID;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(
         entity = Contact.class,
-        parentColumns = "contactID",
-        childColumns = "chatID"))
+                parentColumns = "contactID",
+        childColumns = "chatID", onDelete = CASCADE))
 public class Chat {
     @PrimaryKey @NonNull
-    String chatID;
-    String sender;
-    String lastMessage;
-    @DrawableRes int image;
-
+    private String chatID;
+    private String sender;
+    private String lastMessage;
+    private String imagePath;
 
     public void setChatID(String chatID) { this.chatID = chatID; }
 
@@ -37,7 +40,7 @@ public class Chat {
 
     public void setLastMessage(String lastMessage) { this.lastMessage = lastMessage; }
 
-    public int getImage() { return image; }
+    public String getImagePath() { return imagePath; }
 
-    public void setImage(int image) { this.image = image; }
+    public void setImagePath(String image) { this.imagePath = image; }
 }

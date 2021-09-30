@@ -10,7 +10,7 @@
         android:id="@+id/rl_photo"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/push5"
+        android:src="@drawable/push3"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -40,7 +40,7 @@
                 android:layout_below="@id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:maxLines="1"
                 android:maxLength="40"
                 android:text="I remember a wonderful moment before me you appeared "
                 android:textSize="@dimen/h3"

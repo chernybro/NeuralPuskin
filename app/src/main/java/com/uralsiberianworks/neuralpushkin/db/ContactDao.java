@@ -24,6 +24,7 @@ public interface ContactDao {
     @Update
     void update(Contact contact);
 
-    @Delete
-    void delete(Contact contact);
+
+    @Query("DELETE FROM contact WHERE contactID = :id")
+    void del(String id);
 }
