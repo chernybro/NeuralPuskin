@@ -11,14 +11,12 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 
 public class BaseActivity extends AppCompatActivity {
-    Toolbar toolbar;
-    TextView title;
 
     public final void setupToolbar(int toolbarId, String titlePage){
-        toolbar = (Toolbar) findViewById(toolbarId);
+        Toolbar toolbar = (Toolbar) findViewById(toolbarId);
         setSupportActionBar(toolbar);
 
-        title = (TextView) toolbar.findViewById(R.id.tv_title);
+        TextView title = (TextView) toolbar.findViewById(R.id.tv_title);
         title.setText(titlePage);
 
         getSupportActionBar().setTitle("");

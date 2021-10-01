@@ -1,16 +1,13 @@
-package com.uralsiberianworks.neuralpushkin.recyclerviewChats;
+package com.uralsiberianworks.neuralpushkin.recyclerviewAdapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,9 +15,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.uralsiberianworks.neuralpushkin.AddContactActivity;
+import com.uralsiberianworks.neuralpushkin.SetContactActivity;
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.Chat;
 import com.uralsiberianworks.neuralpushkin.db.Contact;
 
 import java.io.File;
@@ -29,16 +25,15 @@ import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
-    private List<com.uralsiberianworks.neuralpushkin.db.Contact> mArrayList;
-    private Context mContext;
+    private List<Contact> mArrayList;
+    private final Context mContext;
     private static final String CONTACT_DEL = "contact_del";
     private static final String CONTACT_EDIT = "contact_edit";
 
 
 
 
-    public ContactAdapter (Context context, List<com.uralsiberianworks.neuralpushkin.db.Contact> arrayList) {
-        this.mArrayList = arrayList;
+    public ContactAdapter (Context context) {
         this.mContext = context;
 
     }
@@ -56,9 +51,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.list_item_contact, null);
 
-        ContactAdapter.ViewHolder viewHolder = new ContactAdapter.ViewHolder(itemLayoutView);
-
-        return viewHolder;
+        return new ViewHolder(itemLayoutView);
     }
 
     @Override
@@ -75,41 +68,30 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             viewHolder.userPhoto.setImageBitmap(myBitmap);
         }
 
-        viewHolder.delBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, AddContactActivity.class);
-                String id = mArrayList.get(position).getContactID();
-                intent.putExtra(CONTACT_DEL, id);
+        viewHolder.userPhoto.setImageResource(R.drawable.push3);
 
-                new AlertDialog.Builder(mContext)
-                .setMessage("Are you sure you want to delete this contact?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mArrayList.remove(position);
-                        mContext.startActivity(intent);
-                        notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+        viewHolder.delBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, SetContactActivity.class);
+            String id = mArrayList.get(position).getContactID();
+            intent.putExtra(CONTACT_DEL, id);
 
-                    }
-                }).show();
+            new AlertDialog.Builder(mContext)
+            .setMessage("Are you sure you want to delete this contact?")
+            .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
+                mArrayList.remove(position);
+                mContext.startActivity(intent);
+                notifyDataSetChanged();
+            })
+            .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
+            }).show();
 
-            }
         });
 
-        viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, AddContactActivity.class);
-                String id = mArrayList.get(position).getContactID();
-                intent.putExtra(CONTACT_EDIT, id);
-                mContext.startActivity(intent);
-            }
+        viewHolder.editBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, SetContactActivity.class);
+            String id = mArrayList.get(position).getContactID();
+            intent.putExtra(CONTACT_EDIT, id);
+            mContext.startActivity(intent);
         });
     }
 
@@ -120,10 +102,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder  {
 
-        public TextView tvName;
-        public ImageView userPhoto;
-        private ImageButton editBtn;
-        private ImageButton delBtn;
+        public final TextView tvName;
+        public final ImageView userPhoto;
+        private final ImageButton editBtn;
+        private final ImageButton delBtn;
 
 
         public ViewHolder(View itemLayoutView) {

@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin;
+package com.uralsiberianworks.neuralpushkin.recyclerConversation;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.uralsiberianworks.neuralpushkin.NeuralApp;
+import com.uralsiberianworks.neuralpushkin.R;
 import com.uralsiberianworks.neuralpushkin.api.PushkinApi;
 import com.uralsiberianworks.neuralpushkin.db.Chat;
 import com.uralsiberianworks.neuralpushkin.db.ChatDao;
@@ -24,7 +26,7 @@ import com.uralsiberianworks.neuralpushkin.db.Message;
 import com.uralsiberianworks.neuralpushkin.db.MessageDao;
 import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
 import com.uralsiberianworks.neuralpushkin.recyclerConversation.ConversationAdapter;
-import com.uralsiberianworks.neuralpushkin.recyclerviewChats.PushkinResponse;
+import com.uralsiberianworks.neuralpushkin.api.PushkinResponse;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,21 +44,19 @@ public class Conversation extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ConversationAdapter mAdapter;
     private EditText mText;
-    private NeuralDatabase db;
     private MessageDao messageDao;
     private ContactDao contactDao;
     private ChatDao chatDao;
     public static final String URL = "http://46.17.97.44:5000";
     private static final String TAG = "Conversation";
     private PushkinApi pushkinApi;
-    private float temp = 1;
     private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_conversation);
-        db = ((NeuralApp)getApplication()).getDb();
+        NeuralDatabase db = ((NeuralApp) getApplication()).getDb();
         messageDao = db.getMessageDao();
         contactDao = db.getContactDao();
         chatDao = db.getChatDao();
@@ -118,7 +118,7 @@ public class Conversation extends AppCompatActivity {
     }
 
     private void setBotMessage(List<Message> data, String id, String enteredText, Message typingMessage) {
-        Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, temp, 120);
+        Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, 1, 120);
         call.enqueue(new Callback<PushkinResponse>() {
             @Override
             public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
@@ -131,7 +131,7 @@ public class Conversation extends AppCompatActivity {
                 message1.setInitialLength(enteredText.length());
                 data.add(message1);
                 Chat chat = chatDao.getChatFromID(id);
-                chat.setLastMessage(message1.getText());
+                chat.setLastMessage(contactDao.getContact(id).getName() + ": " + message1.getText());
                 chatDao.update(chat);
                 mAdapter.addItem(data);
                 messageDao.insert(message1);
@@ -183,7 +183,7 @@ public class Conversation extends AppCompatActivity {
             mAdapter.addItem(data);
             messageDao.insert(message);
             Chat chat = chatDao.getChatFromID(id);
-            chat.setLastMessage(message.getText());
+            chat.setLastMessage("Вы: " + message.getText());
             chatDao.update(chat);
             data.clear();
             mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
@@ -212,7 +212,7 @@ public class Conversation extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAdapter.updateLastMessage(messageDao.getAllMessages(id));
+        //mAdapter.updateLastMessage(messageDao.getAllMessages(id));
     }
 
     private void configureNetwork() {
@@ -231,6 +231,13 @@ public class Conversation extends AppCompatActivity {
                 .build();
 
         pushkinApi = retrofit.create(PushkinApi.class);
+    }
+
+    //public List<Message> setChatData(String id){return messageDao.getAllMessages(id).;}
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     public List<Message> setChatData(String id){

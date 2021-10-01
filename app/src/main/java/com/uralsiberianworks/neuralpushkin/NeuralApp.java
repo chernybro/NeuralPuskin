@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
 
+
 public class NeuralApp extends Application {
     
     private static NeuralDatabase db;
@@ -26,6 +27,7 @@ public class NeuralApp extends Application {
                 NeuralDatabase.class, "database")
                 .allowMainThreadQueries()
                 .build();
+
 
     }
 }

@@ -25,11 +25,8 @@
             android:name=".MainActivity"
             android:label="title_main_act"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".Conversation"/>
-        <activity android:name=".AddContactActivity"/>
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+        <activity android:name=".recyclerConversation.Conversation"/>
+        <activity android:name=".SetContactActivity"/>
     </application>
 
 </manifest>

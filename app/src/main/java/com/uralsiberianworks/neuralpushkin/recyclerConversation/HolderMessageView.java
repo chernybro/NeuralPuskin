@@ -11,12 +11,12 @@ import com.uralsiberianworks.neuralpushkin.R;
 
 
 
-public class HolderMe extends RecyclerView.ViewHolder {
+public class HolderMessageView extends RecyclerView.ViewHolder {
 
-    private TextView chatText;
+    private final TextView chatText;
 
 
-    public HolderMe(View v) {
+    public HolderMessageView(View v) {
         super(v);
         chatText = (TextView) v.findViewById(R.id.tv_chat_text);
     }

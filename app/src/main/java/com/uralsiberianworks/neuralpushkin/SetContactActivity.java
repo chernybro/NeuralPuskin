@@ -9,22 +9,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.squareup.picasso.Picasso;
 import com.uralsiberianworks.neuralpushkin.db.Chat;
 import com.uralsiberianworks.neuralpushkin.db.ChatDao;
 import com.uralsiberianworks.neuralpushkin.db.Contact;
@@ -32,26 +25,16 @@ import com.uralsiberianworks.neuralpushkin.db.ContactDao;
 import com.uralsiberianworks.neuralpushkin.db.Message;
 import com.uralsiberianworks.neuralpushkin.db.MessageDao;
 import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
-import com.uralsiberianworks.neuralpushkin.recyclerConversation.ConversationAdapter;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
-public class AddContactActivity extends AppCompatActivity {
+public class SetContactActivity extends AppCompatActivity {
     public static final int PICK_IMAGE = 1;
     private static final String TAG = "AddContactActivity";
-    NeuralDatabase db;
     private ContactDao contactDao;
     private ChatDao chatDao;
     private MessageDao messageDao;
@@ -59,13 +42,12 @@ public class AddContactActivity extends AppCompatActivity {
     private EditText etContactName;
     private Button addButton;
     private String imagePath;
-    private String id = "0";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
-        db = ((NeuralApp)getApplication()).getDb();
+        NeuralDatabase db = ((NeuralApp) getApplication()).getDb();
         contactDao = db.getContactDao();
         chatDao = db.getChatDao();
         messageDao = db.getMessageDao();
@@ -74,6 +56,7 @@ public class AddContactActivity extends AppCompatActivity {
         etContactName = findViewById(R.id.et_name_contact);
         addButton = findViewById(R.id.add_contact_btn);
 
+        String id = "0";
         if (getIntent().hasExtra("contact_del")) {
             Bundle arguments = getIntent().getExtras();
             id = arguments.get("contact_del").toString();
@@ -103,7 +86,6 @@ public class AddContactActivity extends AppCompatActivity {
 
             }
         } else {
-
 
             saveImage();
 
@@ -138,6 +120,7 @@ public class AddContactActivity extends AppCompatActivity {
     }
 
     private void updateContact(Contact contact) {
+        int lastNameLength = contact.getName().length();
         contact.setName(etContactName.getText().toString());
         contact.setImagePath(imagePath);
         contactDao.update(contact);
@@ -145,6 +128,7 @@ public class AddContactActivity extends AppCompatActivity {
         Chat chat = chatDao.getChatFromID(contact.getContactID());
         chat.setSender(contact.getName());
         chat.setImagePath(contact.getImagePath());
+        chat.setLastMessage(contact.getName() + chat.getLastMessage().substring(lastNameLength));
         chatDao.update(chat);
 
         finish();
@@ -162,7 +146,7 @@ public class AddContactActivity extends AppCompatActivity {
             contactDao.insert(contact);
 
             Chat chat = new Chat();
-            chat.setLastMessage("Hi");
+            chat.setLastMessage(contact.getName() + ": Hi");
             chat.setSender(contact.getName());
             chat.setImagePath(contact.getImagePath());
             chat.setChatID(contact.getContactID());
@@ -172,9 +156,9 @@ public class AddContactActivity extends AppCompatActivity {
 
             message.setMessageID(String.valueOf(UUID.randomUUID()));
             message.setChatID(chat.getChatID());
-            message.setInitialLength(chat.getLastMessage().length());
+            message.setInitialLength(0);
             message.setType("1");
-            message.setText(chat.getLastMessage());
+            message.setText(chat.getLastMessage().substring(2+chat.getSender().length()));
             messageDao.insert(message);
 
             finish();

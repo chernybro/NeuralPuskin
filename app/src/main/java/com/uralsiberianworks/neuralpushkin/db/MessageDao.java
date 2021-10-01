@@ -17,8 +17,6 @@ public interface MessageDao {
     @Insert
     void insert(Message message);
 
-    @Update
-    void update(Message message);
 
     @Delete
     void delete(Message message);

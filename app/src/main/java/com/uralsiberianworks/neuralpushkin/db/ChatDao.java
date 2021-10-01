@@ -1,5 +1,6 @@
 package com.uralsiberianworks.neuralpushkin.db;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,8 +18,8 @@ public interface ChatDao {
     @Query("SELECT * FROM chat")
     List<Chat> getAllChats();
 
-    @Query("SELECT lastMessage FROM chat WHERE chatID = :id")
-    String getLastMessageByID(String id);
+    @Query("SELECT CASE WHEN EXISTS ( SELECT * FROM chat WHERE chatID = :id) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END")
+    boolean checkPushkinExist(String id);
 
     @Insert
     void insert(Chat chat);
@@ -26,6 +27,4 @@ public interface ChatDao {
     @Update
     void update(Chat chat);
 
-    @Delete
-    void delete(Chat chat);
 }

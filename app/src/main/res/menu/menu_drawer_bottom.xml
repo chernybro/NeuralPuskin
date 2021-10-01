@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/telegram"
             android:icon="@drawable/ic_baseline_send_24"
             app:itemIconTint="@color/blue_button"
-            android:title="Telegram" />
+            android:title="@string/telegram_link" />
         <item
             android:id="@+id/mail"
             android:icon="@drawable/ic_baseline_alternate_email_24"
-            android:title="alexwortega@yandex.ru" />
+            android:title="@string/post_link" />
         <item
             android:id="@+id/web"
             android:icon="@drawable/ic_baseline_language_24"
-            android:title="pushkin.monetka.name" />
+            android:title="@string/website_link" />
     </group>
 </menu>

@@ -1,10 +1,17 @@
 <resources>
     <string name="app_name">NeuralPushkin</string>
-    <string name="label_text">Neural Pushkin</string>
-    <string name="enter_phrase">Введите начало фразы</string>
-    <string name="geneerate_text_btn">Напоэтить</string>
-    <string name="default_pushkin_text">здарова бандит fuck</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="enter_name_hint">Введите имя бота</string>
+    <string name="name">NAME</string>
+    <string name="send_btn">SEND</string>
+    <string name="message_hint">Enter your message</string>
+    <string name="default_last_message">I remember a wonderful moment before me you appeared</string>
+    <string name="contacts_label">Contacts</string>
+    <string name="chats_label">Chats</string>
+    <string name="telegram_link">Telegram</string>
+    <string name="post_link">alexwortega@yandex.ru</string>
+    <string name="website_link">pushkin.monetka.name</string>
 </resources>

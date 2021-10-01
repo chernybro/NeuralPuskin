@@ -6,11 +6,11 @@
         <item
             android:id="@+id/nav_contacts"
             android:icon="@drawable/ic_action_contacts"
-            android:title="Contacts" />
+            android:title="@string/contacts_label" />
         <item
             android:id="@+id/nav_chats"
             app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_action_chats"
-            android:title="Chats" />
+            android:title="@string/chats_label" />
     </group>
 </menu>

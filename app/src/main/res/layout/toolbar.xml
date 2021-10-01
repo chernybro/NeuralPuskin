@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAllCaps="false"
-        android:text="Messasese"
         android:textSize="@dimen/h1"
         android:textColor="@color/almost_white" />
 </androidx.appcompat.widget.Toolbar>

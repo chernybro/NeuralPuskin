@@ -22,7 +22,7 @@
         android:layout_width="280dp"
         android:layout_height="40dp"
         android:inputType="textPersonName"
-        android:hint=" Введите имя бота"
+        android:hint="@string/enter_name_hint"
         android:maxLength="25"
         android:textColor="@color/almost_white"
         android:layout_below="@id/edit_contact_image"

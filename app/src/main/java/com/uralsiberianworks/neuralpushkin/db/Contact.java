@@ -1,7 +1,6 @@
 package com.uralsiberianworks.neuralpushkin.db;
 
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -46,8 +45,6 @@ public class Contact {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

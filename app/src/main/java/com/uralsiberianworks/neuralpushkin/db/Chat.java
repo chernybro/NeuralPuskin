@@ -1,13 +1,11 @@
 package com.uralsiberianworks.neuralpushkin.db;
 
-import androidx.annotation.DrawableRes;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import java.util.List;
-import java.util.UUID;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -21,6 +19,17 @@ public class Chat {
     private String sender;
     private String lastMessage;
     private String imagePath;
+
+    public Chat(@NonNull String chatID, String sender, String lastMessage, String imagePath) {
+        this.chatID = chatID;
+        this.sender = sender;
+        this.lastMessage = lastMessage;
+        this.imagePath = imagePath;
+    }
+
+    public Chat() {
+
+    }
 
     public void setChatID(String chatID) { this.chatID = chatID; }
 
@@ -43,4 +52,12 @@ public class Chat {
     public String getImagePath() { return imagePath; }
 
     public void setImagePath(String image) { this.imagePath = image; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chat chat = (Chat) o;
+        return chatID.equals(chat.chatID);
+    }
 }

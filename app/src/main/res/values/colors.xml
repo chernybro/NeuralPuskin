@@ -2,14 +2,10 @@
 <resources>
     <color name="colorPrimary">@color/blue_1</color>
     <color name="colorPrimaryDark">@color/blue_1</color>
-    <color name="colorAccent">@color/blue_5</color>
+
 
     <color name="blue_1">#00101f</color>
-    <color name="blue_5">#0078ff</color>
-    
-    <color name="labelLilac">#6a2ec9</color>
-    <color name="orange">@android:color/holo_orange_light</color>
-    <color name="colorTextInfo">#9b9b9b</color>
+
     <color name="bg_main_color">#212121</color>
 
 

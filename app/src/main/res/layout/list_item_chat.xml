@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/almost_white"
-                android:text="Alexander Pushkin"
+                android:text="Name Surname"
                 android:textSize="@dimen/h2" />
             <TextView
                 android:id="@+id/tv_last_chat"
@@ -42,12 +42,12 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:maxLength="40"
-                android:text="I remember a wonderful moment before me you appeared "
+                android:text="@string/default_last_message"
                 android:textSize="@dimen/h3"
                 android:textColor="@color/grey"
                 android:layout_marginTop="3dp"/>
         </RelativeLayout>
-    </LinearLayout>'
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.Chat;
 import com.uralsiberianworks.neuralpushkin.db.Message;
 
 import java.io.File;
@@ -24,12 +23,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     // The items to display in your RecyclerView
     private List<Message> items;
-    String recipientImagePath;
+    final String recipientImagePath;
 
     private final int YOU = 1, ME = 2, TYPING = 3;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ConversationAdapter(List<Message> items, String recipientImagePath) {
+    public ConversationAdapter(List<Message> items,String recipientImagePath) {
         this.items = items;
         this.recipientImagePath = recipientImagePath;
     }
@@ -37,7 +36,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return this.items.size();
+        return items.size();
     }
 
     public void updateLastMessage(List<Message> items) {
@@ -48,13 +47,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemViewType(int position) {
         //More to come
-        if (items.get(position).getType().equals("1")) {
-            return YOU;
-        }else if (items.get(position).getType().equals("2")) {
-            return ME;
-        }
-        else if (items.get(position).getType().equals("3")) {
-            return TYPING;
+        switch (items.get(position).getType()) {
+            case "1":
+                return YOU;
+            case "2":
+                return ME;
+            case "3":
+                return TYPING;
         }
         return -1;
     }
@@ -63,8 +62,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-
-
 
         switch (viewType) {
             case YOU:
@@ -79,19 +76,19 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     imageView.setImageBitmap(myBitmap);
                 }
-                viewHolder = new HolderYou(v2);
+                viewHolder = new HolderMessageView(v2);
                 break;
             case ME:
                 View v = inflater.inflate(R.layout.layout_holder_me, viewGroup, false);
-                viewHolder = new HolderMe(v);
+                viewHolder = new HolderMessageView(v);
                 break;
             case TYPING:
                 View v3 = inflater.inflate(R.layout.layout_holder_typing, viewGroup, false);
-                viewHolder = new HolderTyping(v3);
+                viewHolder = new HolderMessageView(v3);
                 break;
             default:
                 View v4 = inflater.inflate(R.layout.layout_holder_typing, viewGroup, false);
-                viewHolder = new HolderYou(v4);
+                viewHolder = new HolderMessageView(v4);
                 break;
         }
         return viewHolder;
@@ -110,25 +107,25 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case YOU:
-                HolderYou vh2 = (HolderYou) viewHolder;
+                HolderMessageView vh2 = (HolderMessageView) viewHolder;
                 configureViewHolderYou(vh2, position);
                 break;
             case ME:
-                HolderMe vh = (HolderMe) viewHolder;
+                HolderMessageView vh = (HolderMessageView) viewHolder;
                 configureViewHolderMe(vh, position);
                 break;
             default:
-                HolderTyping vh3 = (HolderTyping) viewHolder;
+                HolderMessageView vh3 = (HolderMessageView) viewHolder;
                 configureViewHolderTyping(vh3, position);
                 break;
         }
     }
 
-    private void configureViewHolderMe(HolderMe vh1, int position) {
+    private void configureViewHolderMe(HolderMessageView vh1, int position) {
         vh1.getChatText().setText(items.get(position).getText());
     }
 
-    private void configureViewHolderYou(HolderYou vh1, int position) {
+    private void configureViewHolderYou(HolderMessageView vh1, int position) {
         final SpannableStringBuilder sb = new SpannableStringBuilder(items.get(position).getText());
         final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(158, 158, 158));
         int colorLength = items.get(position).getInitialLength();
@@ -136,7 +133,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         vh1.getChatText().setText(sb);
     }
 
-    private void configureViewHolderTyping(HolderTyping vh1, int position) {
+    private void configureViewHolderTyping(HolderMessageView vh1, int position) {
         vh1.getChatText().setText(items.get(position).getText());
     }
 }

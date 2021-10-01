@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Hi, joe how are you, do you like to join our party in next week because you don't like party?"
+            android:text="@string/message_hint"
             android:textColor="@color/almost_white"
             android:textSize="@dimen/h3"
             android:background="@drawable/bg_chat_me"/>
