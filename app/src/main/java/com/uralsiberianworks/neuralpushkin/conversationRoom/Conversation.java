@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.ConversationRoom;
+package com.uralsiberianworks.neuralpushkin.conversationRoom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.uralsiberianworks.neuralpushkin.NeuralApp;
 import com.uralsiberianworks.neuralpushkin.R;
 import com.uralsiberianworks.neuralpushkin.api.PushkinApi;
-import com.uralsiberianworks.neuralpushkin.db.Chat;
-import com.uralsiberianworks.neuralpushkin.db.ChatDao;
-import com.uralsiberianworks.neuralpushkin.db.Contact;
-import com.uralsiberianworks.neuralpushkin.db.ContactDao;
-import com.uralsiberianworks.neuralpushkin.db.Message;
-import com.uralsiberianworks.neuralpushkin.db.MessageDao;
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
+import com.uralsiberianworks.neuralpushkin.database.Chat;
+import com.uralsiberianworks.neuralpushkin.database.ChatDao;
+import com.uralsiberianworks.neuralpushkin.database.Contact;
+import com.uralsiberianworks.neuralpushkin.database.ContactDao;
+import com.uralsiberianworks.neuralpushkin.database.Message;
+import com.uralsiberianworks.neuralpushkin.database.MessageDao;
+import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 import com.uralsiberianworks.neuralpushkin.api.PushkinResponse;
 
 import java.io.File;

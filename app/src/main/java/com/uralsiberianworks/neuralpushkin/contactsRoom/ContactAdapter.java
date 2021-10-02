@@ -1,24 +1,25 @@
-package com.uralsiberianworks.neuralpushkin.ContactsRoom;
+package com.uralsiberianworks.neuralpushkin.contactsRoom;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.uralsiberianworks.neuralpushkin.SetContactActivity;
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.Contact;
+import com.uralsiberianworks.neuralpushkin.database.Contact;
 
 import java.io.File;
 import java.util.List;
@@ -32,11 +33,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private static final String CONTACT_EDIT = "contact_edit";
 
 
-
-
-    public ContactAdapter (Context context) {
+    public ContactAdapter(Context context, List<Contact> mArrayList) {
         this.mContext = context;
-
+        this.mArrayList = mArrayList;
+        notifyDataSetChanged();
     }
 
     public void update(List<Contact> arrayList) {
@@ -60,39 +60,44 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
         viewHolder.tvName.setText(mArrayList.get(position).getName());
         String recipientImagePath = mArrayList.get(position).getImagePath();
-        if (!recipientImagePath.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
+        if (!mArrayList.get(position).getContactID().equals("push")) {
             File imgFile = new File(recipientImagePath);
 
             if (imgFile.exists()) {
 
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
+                Log.i("TAG", "saveImage: " + imgFile.length());
                 viewHolder.userPhoto.setImageBitmap(myBitmap);
             }
         }
 
+        String id = mArrayList.get(position).getContactID();
+
         viewHolder.delBtn.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, SetContactActivity.class);
-            String id = mArrayList.get(position).getContactID();
             intent.putExtra(CONTACT_DEL, id);
-
-            new AlertDialog.Builder(mContext)
-            .setMessage("Are you sure you want to delete this contact?")
-            .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                mArrayList.remove(position);
-                mContext.startActivity(intent);
-                notifyDataSetChanged();
-            })
-            .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
-            }).show();
-
+            if (id.equals("push")) { Toast.makeText(mContext,"Оставьте Пушкина в покое",Toast.LENGTH_SHORT).show();}
+            else {
+                new AlertDialog.Builder(mContext)
+                        .setMessage("Are you sure you want to delete this contact?")
+                        .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
+                            mArrayList.remove(position);
+                            mContext.startActivity(intent);
+                            notifyDataSetChanged();
+                        })
+                        .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
+                        }).show();
+            }
         });
 
         viewHolder.editBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(mContext, SetContactActivity.class);
-            String id = mArrayList.get(position).getContactID();
-            intent.putExtra(CONTACT_EDIT, id);
-            mContext.startActivity(intent);
+            if (id.equals("push")){
+                Toast.makeText(mContext,"Оставьте Пушкина в покое",Toast.LENGTH_SHORT).show(); }
+            else {
+            Intent intent1 = new Intent(mContext, SetContactActivity.class);
+            intent1.putExtra(CONTACT_EDIT, id);
+            mContext.startActivity(intent1);
+        }
         });
     }
 

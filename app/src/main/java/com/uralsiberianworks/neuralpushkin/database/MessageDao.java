@@ -1,11 +1,10 @@
-package com.uralsiberianworks.neuralpushkin.db;
+package com.uralsiberianworks.neuralpushkin.database;
 
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.db;
+package com.uralsiberianworks.neuralpushkin.database;
 
 
 import androidx.room.Dao;

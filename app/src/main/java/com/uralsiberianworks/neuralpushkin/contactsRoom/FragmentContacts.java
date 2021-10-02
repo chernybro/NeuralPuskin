@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.ContactsRoom;
+package com.uralsiberianworks.neuralpushkin.contactsRoom;
 
 
 import android.os.Bundle;
@@ -15,16 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.uralsiberianworks.neuralpushkin.MainActivity;
 import com.uralsiberianworks.neuralpushkin.NeuralApp;
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.ContactDao;
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
+import com.uralsiberianworks.neuralpushkin.database.Contact;
+import com.uralsiberianworks.neuralpushkin.database.ContactDao;
+import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
+import java.util.List;
 
 
 public class FragmentContacts extends Fragment {
 
     private ContactAdapter mAdapter;
     private ContactDao contactDao;
-    private NeuralDatabase db;
 
     public FragmentContacts(){ }
 
@@ -37,23 +38,23 @@ public class FragmentContacts extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, null, false);
 
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
         ((MainActivity)getActivity()).setupToolbar(R.id.toolbar, "Contacts");
-        db = ((NeuralApp) getContext().getApplicationContext()).getDb();
+        NeuralDatabase db = ((NeuralApp) getContext().getApplicationContext()).getDb();
         contactDao = db.getContactDao();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ContactAdapter(getContext());
+        mAdapter = new ContactAdapter(getContext(),setData());
         recyclerView.setAdapter (mAdapter);
-        setData();
+
 
         return view;
     }
 
 
-    public void setData(){
-        mAdapter.update(contactDao.getAllContacts());
+    public List<Contact> setData(){
+        return contactDao.getAllContacts();
     }
 
     @Override

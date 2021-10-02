@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.ChatsRoom;
+package com.uralsiberianworks.neuralpushkin.chatsRoom;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,39 +16,35 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.uralsiberianworks.neuralpushkin.MainActivity;
 import com.uralsiberianworks.neuralpushkin.NeuralApp;
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.Chat;
-import com.uralsiberianworks.neuralpushkin.db.ChatDao;
-import com.uralsiberianworks.neuralpushkin.db.Contact;
-import com.uralsiberianworks.neuralpushkin.db.ContactDao;
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
-import com.uralsiberianworks.neuralpushkin.ConversationRoom.Conversation;
+import com.uralsiberianworks.neuralpushkin.database.Chat;
+import com.uralsiberianworks.neuralpushkin.database.ChatDao;
+import com.uralsiberianworks.neuralpushkin.database.Contact;
+import com.uralsiberianworks.neuralpushkin.database.ContactDao;
+import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
+import com.uralsiberianworks.neuralpushkin.conversationRoom.Conversation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentChats extends Fragment implements ChatsAdapter.ChatViewHolder.ClickListener {
     private static final String CHAT_ID = "chat_id";
     private ChatsAdapter mAdapter;
     private static boolean initialBotCreated = false;
-    private List<Chat> dataList = new ArrayList<>();
-    private NeuralDatabase db;
     private ChatDao chatDao;
     private ContactDao contactDao;
 
 
-    public FragmentChats(){}
-
+    public FragmentChats(){ }
 
 
     public void onCreate(Bundle a){
         super.onCreate(a);
         setHasOptionsMenu(true);
-
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats, null, false);
-        db = ((NeuralApp) getContext().getApplicationContext()).getDb();
+        NeuralDatabase db = ((NeuralApp) getContext().getApplicationContext()).getDb();
         chatDao = db.getChatDao();
         contactDao = db.getContactDao();
         getActivity().invalidateOptionsMenu();
@@ -56,17 +52,17 @@ public class FragmentChats extends Fragment implements ChatsAdapter.ChatViewHold
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ChatsAdapter(this);
+        mAdapter = new ChatsAdapter(this, setData());
         recyclerView.setAdapter (mAdapter);
-        setData();
 
         return view;
     }
 
 
 //if(!contactDao.getAllContacts().getValue().contains(new Contact("push","Alexander Pushkin",Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" + R.drawable.push4).toString())))
-    public void setData() {
+    public List<Chat> setData() {
         if (initialBotCreated) {
+            chatDao.getAllChats();
             mAdapter.updateLastMessage(chatDao.getAllChats());
         } else if (!chatDao.checkPushkinExist("push")) {
             Contact pushkinContact = new Contact();
@@ -75,7 +71,7 @@ public class FragmentChats extends Fragment implements ChatsAdapter.ChatViewHold
             pushkinContact.setContactID(s);
             String imageUri = Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString();
             pushkinContact.setImagePath(imageUri);
-            pushkinContact.setName("Alexander Pushkin");
+            pushkinContact.setName("Александр Пушкин");
             contactDao.insert(pushkinContact);
 
             Chat pushkinChat = new Chat();
@@ -88,6 +84,7 @@ public class FragmentChats extends Fragment implements ChatsAdapter.ChatViewHold
             mAdapter.updateLastMessage(chatDao.getAllChats());
             initialBotCreated = true;
         }
+        return chatDao.getAllChats();
     }
 
     @Override

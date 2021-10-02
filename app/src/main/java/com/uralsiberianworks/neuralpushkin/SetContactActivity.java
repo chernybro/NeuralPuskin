@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,13 +19,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.uralsiberianworks.neuralpushkin.db.Chat;
-import com.uralsiberianworks.neuralpushkin.db.ChatDao;
-import com.uralsiberianworks.neuralpushkin.db.Contact;
-import com.uralsiberianworks.neuralpushkin.db.ContactDao;
-import com.uralsiberianworks.neuralpushkin.db.Message;
-import com.uralsiberianworks.neuralpushkin.db.MessageDao;
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
+import com.uralsiberianworks.neuralpushkin.chatsRoom.ChatsAdapter;
+import com.uralsiberianworks.neuralpushkin.contactsRoom.ContactAdapter;
+import com.uralsiberianworks.neuralpushkin.database.Chat;
+import com.uralsiberianworks.neuralpushkin.database.ChatDao;
+import com.uralsiberianworks.neuralpushkin.database.Contact;
+import com.uralsiberianworks.neuralpushkin.database.ContactDao;
+import com.uralsiberianworks.neuralpushkin.database.Message;
+import com.uralsiberianworks.neuralpushkin.database.MessageDao;
+import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,13 +59,17 @@ public class SetContactActivity extends AppCompatActivity {
         etContactName = findViewById(R.id.et_name_contact);
         addButton = findViewById(R.id.add_contact_btn);
 
-        String id = "0";
+        String id;
+        ContactAdapter contactAdapter;
+        ChatsAdapter chatsAdapter;
         if (getIntent().hasExtra("contact_del")) {
             Bundle arguments = getIntent().getExtras();
             id = arguments.get("contact_del").toString();
 
-            if (!id.equals("0")) {
+            if (!id.equals("")) {
                 contactDao.del(id);
+                new ChatsAdapter(null, chatDao.getAllChats());
+                new ContactAdapter(getApplicationContext(), contactDao.getAllContacts());
                 finish();
             }
         } else if (getIntent().hasExtra("contact_edit")) {
@@ -75,17 +82,16 @@ public class SetContactActivity extends AppCompatActivity {
                     File imgFile = new File(path);
 
                     if (imgFile.exists()) {
-
                         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
                         editImage.setImageBitmap(myBitmap);
                         imagePath = imgFile.getAbsolutePath();
+                        Log.i(TAG, "saveImage: " + imgFile.length());
+                        imgFile = null;
                     }
                 } else saveImage();
                 etContactName.setText(contact.getName());
                 imageListener();
                 addContactButtonListener(contact);
-
             }
         } else {
 
@@ -93,6 +99,8 @@ public class SetContactActivity extends AppCompatActivity {
 
             setListeners();
         }
+        new ChatsAdapter(null, chatDao.getAllChats());
+        new ContactAdapter(getApplicationContext(), contactDao.getAllContacts());
     }
 
 
@@ -101,24 +109,10 @@ public class SetContactActivity extends AppCompatActivity {
         addContactButtonListener();
     }
 
-    private void addContactButtonListener() {
-        addButton.setOnClickListener(view -> {
-            if (!etContactName.getText().equals("")) {
-
-                setNewContact();
-
-            }
-        });
-    }
+    private void addContactButtonListener() { addButton.setOnClickListener(view -> { if (!etContactName.getText().equals("")) { setNewContact(); } }); }
 
     private void addContactButtonListener(Contact contact) {
-        addButton.setOnClickListener(view -> {
-            if (!etContactName.getText().equals("")) {
-
-                updateContact(contact);
-
-            }
-        });
+        addButton.setOnClickListener(view -> { if (!etContactName.getText().equals("")) { updateContact(contact); } });
     }
 
     private void updateContact(Contact contact) {
@@ -199,7 +193,8 @@ public class SetContactActivity extends AppCompatActivity {
         try{
             OutputStream stream = null;
             stream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,15,stream);
+            Log.i(TAG, "saveImage: " + file.length());
             stream.flush();
             stream.close();
 
@@ -214,6 +209,7 @@ public class SetContactActivity extends AppCompatActivity {
         // Display the saved image to ImageView
         editImage.setImageURI(savedImageURI);
         imagePath = file.getAbsolutePath();
+        file = null;
     }
     private void saveImage(){
         editImage.setImageResource(R.drawable.ic_baseline_account_circle_24);
@@ -230,6 +226,7 @@ public class SetContactActivity extends AppCompatActivity {
             OutputStream stream = null;
             stream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            Log.i(TAG, "saveImage: " + file.length());
             stream.flush();
             stream.close();
 
@@ -244,6 +241,7 @@ public class SetContactActivity extends AppCompatActivity {
         // Display the saved image to ImageView
         editImage.setImageURI(savedImageURI);
         imagePath = file.getAbsolutePath();
+        file = null;
     }
 
     private Bitmap takeBitmap(Drawable drawable) {

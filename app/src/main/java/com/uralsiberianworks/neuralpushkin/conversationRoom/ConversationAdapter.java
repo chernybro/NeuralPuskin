@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.ConversationRoom;
+package com.uralsiberianworks.neuralpushkin.conversationRoom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.Message;
+import com.uralsiberianworks.neuralpushkin.database.Message;
 
 import java.io.File;
 import java.util.List;
@@ -83,9 +83,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder = new HolderMessageView(v);
                 break;
             case TYPING:
-                View v3 = inflater.inflate(R.layout.layout_holder_typing, viewGroup, false);
-                viewHolder = new HolderMessageView(v3);
-                break;
             default:
                 View v4 = inflater.inflate(R.layout.layout_holder_typing, viewGroup, false);
                 viewHolder = new HolderMessageView(v4);

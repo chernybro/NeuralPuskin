@@ -1,8 +1,8 @@
-package com.uralsiberianworks.neuralpushkin.ChatsRoom;
+package com.uralsiberianworks.neuralpushkin.chatsRoom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.db.Chat;
+import com.uralsiberianworks.neuralpushkin.database.Chat;
 
 import java.io.File;
 import java.util.List;
@@ -23,8 +23,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
 
 
-    public ChatsAdapter(ChatViewHolder.ClickListener clickListener) {
+    public ChatsAdapter(ChatViewHolder.ClickListener clickListener, List<Chat> mArrayList) {
         this.clickListener = clickListener;
+        this.mArrayList = mArrayList;
+        notifyDataSetChanged();
     }
 
     public void updateLastMessage(List<Chat> arrayList) {
@@ -50,13 +52,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
 
         String recipientImagePath = mArrayList.get(position).getImagePath();
-        if (!mArrayList.isEmpty() && !recipientImagePath.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
+
+        if (!mArrayList.get(position).getChatID().equals("push")) {
              File imgFile = new File(recipientImagePath);
 
             if (imgFile.exists()) {
 
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
+                Log.i("TAGChatsAdapter", "saveImage: " + imgFile.length());
                 viewHolder.userPhoto.setImageBitmap(myBitmap);
             }
         }
@@ -68,14 +71,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
     @Override
     public int getItemCount() {
         return mArrayList.size();
-    }
-
-    public void addItems(List<Chat> dataList) {
-        mArrayList.addAll(dataList);
-    }
-
-    public void clearItems() {
-        mArrayList.clear();
     }
 
 

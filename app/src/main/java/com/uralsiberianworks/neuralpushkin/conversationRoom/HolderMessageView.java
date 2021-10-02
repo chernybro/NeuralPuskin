@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.ConversationRoom;
+package com.uralsiberianworks.neuralpushkin.conversationRoom;
 
 
 import android.view.View;

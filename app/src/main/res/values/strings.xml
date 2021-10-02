@@ -16,7 +16,7 @@
     <string name="website_link">pushkin.monetka.name</string>
 
 
-    <string name="menu_home">Messages</string>
-    <string name="menu_contacts">Contats</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="add_contact_btn">OK</string>
+    <string name="default_chat_name">Name Surname</string>
+    <string name="nav_app_name">NeuralPushkin</string>
 </resources>

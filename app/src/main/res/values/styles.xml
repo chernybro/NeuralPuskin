@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="backgroundColor">@color/chat_blue</item>
     </style>
 
 

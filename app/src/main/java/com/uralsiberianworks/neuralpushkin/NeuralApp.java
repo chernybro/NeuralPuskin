@@ -4,9 +4,9 @@ import android.app.Application;
 
 import androidx.room.Room;
 
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
+import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
-
+// Singleton
 public class NeuralApp extends Application {
     
     private static NeuralDatabase db;

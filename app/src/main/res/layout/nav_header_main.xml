@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
-        android:text="NeuralPushkin"
+        android:text="@string/nav_app_name"
         android:textSize="26sp"
         android:textColor="@android:color/white" />
 </LinearLayout>

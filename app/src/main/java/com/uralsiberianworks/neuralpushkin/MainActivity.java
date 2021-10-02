@@ -14,13 +14,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
-import com.uralsiberianworks.neuralpushkin.ContactsRoom.FragmentContacts;
-import com.uralsiberianworks.neuralpushkin.ChatsRoom.FragmentChats;
+import com.uralsiberianworks.neuralpushkin.contactsRoom.FragmentContacts;
+import com.uralsiberianworks.neuralpushkin.chatsRoom.FragmentChats;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -28,9 +27,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public static final String URL = "http://46.17.97.44:5000";
     private static final String TAG = "MainActivity";
     private DrawerLayout drawer;
-    NavigationView navigationView, navigationViewBottom;
     private Fragment mFragmentToSet;
-    private NeuralDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,21 +36,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         setupToolbar(R.id.toolbar, "Messages");
         Toolbar toolbar = findViewById(R.id.toolbar);
-        TextView title = toolbar.findViewById(R.id.tv_title);
 
-        db = ((NeuralApp) getApplication()).getDb();
-
-        FragmentChats fragmentHolder = new FragmentChats();
+        mFragmentToSet = new FragmentChats();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.frameLayout, fragmentHolder).commit();
-
-
+        ft.add(R.id.frameLayout, mFragmentToSet).commit();
+        mFragmentToSet = null;
 
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        //drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -68,16 +61,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.frameLayout, mFragmentToSet)
-                            .addToBackStack(null)
                             .commit();
                     mFragmentToSet = null;
                 }
             }
         });
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationViewBottom = (NavigationView) findViewById(R.id.nav_view_bottom);
+        NavigationView navigationViewBottom = (NavigationView) findViewById(R.id.nav_view_bottom);
         navigationViewBottom.setNavigationItemSelectedListener(this);
 
 
@@ -100,10 +92,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        //noinspection SimplifiableIfStatement
         if (item.getItemId() == android.R.id.home) {
             drawer.openDrawer(GravityCompat.START);
-             // OPEN DRAWER
             return true;
         }
 
@@ -132,7 +122,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"alexwortega@yandex.ru"});
                     emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "PushkinApp");
                     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
-
                     /* Send it off to the Activity-Chooser */
                     startActivity(Intent.createChooser(emailIntent, "Send mail..."));
                     break;

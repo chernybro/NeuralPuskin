@@ -37,7 +37,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_chat_me"
         android:textColor="@color/almost_white"
-        android:text="OK"
+        android:text="@string/add_contact_btn"
         android:layout_marginTop="32dp"/>
 
 
