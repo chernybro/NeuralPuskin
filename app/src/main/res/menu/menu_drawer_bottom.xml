@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single">
+    <group>
         <item
             android:id="@+id/telegram"
             android:icon="@drawable/ic_baseline_send_24"

@@ -14,4 +14,9 @@
     <string name="telegram_link">Telegram</string>
     <string name="post_link">alexwortega@yandex.ru</string>
     <string name="website_link">pushkin.monetka.name</string>
+
+
+    <string name="menu_home">Messages</string>
+    <string name="menu_contacts">Contats</string>
+    <string name="menu_slideshow">Slideshow</string>
 </resources>

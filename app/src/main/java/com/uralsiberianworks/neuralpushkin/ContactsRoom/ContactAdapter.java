@@ -1,10 +1,11 @@
-package com.uralsiberianworks.neuralpushkin.recyclerviewAdapters;
+package com.uralsiberianworks.neuralpushkin.ContactsRoom;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,16 +60,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
         viewHolder.tvName.setText(mArrayList.get(position).getName());
         String recipientImagePath = mArrayList.get(position).getImagePath();
-        File imgFile = new File(recipientImagePath);
+        if (!recipientImagePath.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
+            File imgFile = new File(recipientImagePath);
 
-        if(imgFile.exists()){
+            if (imgFile.exists()) {
 
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
-            viewHolder.userPhoto.setImageBitmap(myBitmap);
+                viewHolder.userPhoto.setImageBitmap(myBitmap);
+            }
         }
-
-        viewHolder.userPhoto.setImageResource(R.drawable.push3);
 
         viewHolder.delBtn.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, SetContactActivity.class);

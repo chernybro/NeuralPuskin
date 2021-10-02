@@ -24,8 +24,10 @@
         <activity
             android:name=".MainActivity"
             android:label="title_main_act"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".recyclerConversation.Conversation"/>
+        <activity android:name=".ConversationRoom.Conversation"/>
         <activity android:name=".SetContactActivity"/>
     </application>
 

@@ -71,15 +71,17 @@ public class SetContactActivity extends AppCompatActivity {
             if (!id.equals("0")) {
                 Contact contact = contactDao.getContact(id);
                 String path = contact.getImagePath();
-                File imgFile = new File(path);
+                if (!path.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
+                    File imgFile = new File(path);
 
-                if(imgFile.exists()){
+                    if (imgFile.exists()) {
 
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
-                    editImage.setImageBitmap(myBitmap);
-                    imagePath = imgFile.getAbsolutePath();
-                }
+                        editImage.setImageBitmap(myBitmap);
+                        imagePath = imgFile.getAbsolutePath();
+                    }
+                } else saveImage();
                 etContactName.setText(contact.getName());
                 imageListener();
                 addContactButtonListener(contact);

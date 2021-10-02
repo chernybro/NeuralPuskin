@@ -1,7 +1,8 @@
-package com.uralsiberianworks.neuralpushkin.recyclerviewAdapters;
+package com.uralsiberianworks.neuralpushkin.ChatsRoom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,13 +50,15 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
 
         String recipientImagePath = mArrayList.get(position).getImagePath();
-        File imgFile = new File(recipientImagePath);
+        if (!mArrayList.isEmpty() && !recipientImagePath.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
+             File imgFile = new File(recipientImagePath);
 
-        if(imgFile.exists()){
+            if (imgFile.exists()) {
 
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
-            viewHolder.userPhoto.setImageBitmap(myBitmap);
+                viewHolder.userPhoto.setImageBitmap(myBitmap);
+            }
         }
 
         viewHolder.tvLastChat.setText(mArrayList.get(position).getLastMessage());

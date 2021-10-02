@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.recyclerConversation;
+package com.uralsiberianworks.neuralpushkin.ConversationRoom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +25,6 @@ import com.uralsiberianworks.neuralpushkin.db.ContactDao;
 import com.uralsiberianworks.neuralpushkin.db.Message;
 import com.uralsiberianworks.neuralpushkin.db.MessageDao;
 import com.uralsiberianworks.neuralpushkin.db.NeuralDatabase;
-import com.uralsiberianworks.neuralpushkin.recyclerConversation.ConversationAdapter;
 import com.uralsiberianworks.neuralpushkin.api.PushkinResponse;
 
 import java.io.File;

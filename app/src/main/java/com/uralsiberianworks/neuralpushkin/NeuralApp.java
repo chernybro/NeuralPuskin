@@ -18,7 +18,6 @@ public class NeuralApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        
         configureDatabase();
     }
 

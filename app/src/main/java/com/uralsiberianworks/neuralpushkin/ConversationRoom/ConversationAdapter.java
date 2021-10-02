@@ -1,4 +1,4 @@
-package com.uralsiberianworks.neuralpushkin.recyclerConversation;
+package com.uralsiberianworks.neuralpushkin.ConversationRoom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
