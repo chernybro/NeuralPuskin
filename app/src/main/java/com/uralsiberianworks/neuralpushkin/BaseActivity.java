@@ -1,13 +1,10 @@
 package com.uralsiberianworks.neuralpushkin;
 
-import android.content.Context;
 import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 
 public class BaseActivity extends AppCompatActivity {
@@ -21,8 +18,5 @@ public class BaseActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("");
     }
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
-    }
+
 }

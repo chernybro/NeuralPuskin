@@ -13,19 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.MainActivity;
-import com.uralsiberianworks.neuralpushkin.NeuralApp;
-import com.uralsiberianworks.neuralpushkin.R;
-import com.uralsiberianworks.neuralpushkin.database.Contact;
-import com.uralsiberianworks.neuralpushkin.database.ContactDao;
-import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
-import java.util.List;
+import com.uralsiberianworks.neuralpushkin.R;
 
 
 public class FragmentContacts extends Fragment {
 
     private ContactAdapter mAdapter;
-    private ContactDao contactDao;
 
     public FragmentContacts(){ }
 
@@ -40,27 +34,25 @@ public class FragmentContacts extends Fragment {
 
         getActivity().invalidateOptionsMenu();
         ((MainActivity)getActivity()).setupToolbar(R.id.toolbar, "Contacts");
-        NeuralDatabase db = ((NeuralApp) getContext().getApplicationContext()).getDb();
-        contactDao = db.getContactDao();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ContactAdapter(getContext(),setData());
+        mAdapter = new ContactAdapter(getContext());
         recyclerView.setAdapter (mAdapter);
-
+        setData();
 
         return view;
     }
 
 
-    public List<Contact> setData(){
-        return contactDao.getAllContacts();
+    public void setData(){
+         mAdapter.update();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-         mAdapter.update(contactDao.getAllContacts());
+         mAdapter.update();
     }
 
 }

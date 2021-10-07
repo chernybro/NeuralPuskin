@@ -22,11 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.uralsiberianworks.neuralpushkin.chatsRoom.ChatsAdapter;
 import com.uralsiberianworks.neuralpushkin.contactsRoom.ContactAdapter;
 import com.uralsiberianworks.neuralpushkin.database.Chat;
-import com.uralsiberianworks.neuralpushkin.database.ChatDao;
 import com.uralsiberianworks.neuralpushkin.database.Contact;
-import com.uralsiberianworks.neuralpushkin.database.ContactDao;
 import com.uralsiberianworks.neuralpushkin.database.Message;
-import com.uralsiberianworks.neuralpushkin.database.MessageDao;
 import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
 import java.io.File;
@@ -38,45 +35,28 @@ import java.util.UUID;
 public class SetContactActivity extends AppCompatActivity {
     public static final int PICK_IMAGE = 1;
     private static final String TAG = "AddContactActivity";
-    private ContactDao contactDao;
-    private ChatDao chatDao;
-    private MessageDao messageDao;
     private ImageView editImage;
     private EditText etContactName;
     private Button addButton;
     private String imagePath;
+    private NeuralDatabase db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
-        NeuralDatabase db = ((NeuralApp) getApplication()).getDb();
-        contactDao = db.getContactDao();
-        chatDao = db.getChatDao();
-        messageDao = db.getMessageDao();
+        db = ((NeuralApp) getApplication()).getDb();
 
         editImage = findViewById(R.id.edit_contact_image);
         etContactName = findViewById(R.id.et_name_contact);
         addButton = findViewById(R.id.add_contact_btn);
 
         String id;
-        ContactAdapter contactAdapter;
-        ChatsAdapter chatsAdapter;
-        if (getIntent().hasExtra("contact_del")) {
-            Bundle arguments = getIntent().getExtras();
-            id = arguments.get("contact_del").toString();
-
-            if (!id.equals("")) {
-                contactDao.del(id);
-                new ChatsAdapter(null, chatDao.getAllChats());
-                new ContactAdapter(getApplicationContext(), contactDao.getAllContacts());
-                finish();
-            }
-        } else if (getIntent().hasExtra("contact_edit")) {
+        if (getIntent().hasExtra("contact_edit")) {
             Bundle arguments = getIntent().getExtras();
             id = arguments.get("contact_edit").toString();
             if (!id.equals("0")) {
-                Contact contact = contactDao.getContact(id);
+                Contact contact = db.getContactDao().getContact(id);
                 String path = contact.getImagePath();
                 if (!path.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
                     File imgFile = new File(path);
@@ -87,6 +67,7 @@ public class SetContactActivity extends AppCompatActivity {
                         imagePath = imgFile.getAbsolutePath();
                         Log.i(TAG, "saveImage: " + imgFile.length());
                         imgFile = null;
+                        myBitmap = null;
                     }
                 } else saveImage();
                 etContactName.setText(contact.getName());
@@ -99,8 +80,8 @@ public class SetContactActivity extends AppCompatActivity {
 
             setListeners();
         }
-        new ChatsAdapter(null, chatDao.getAllChats());
-        new ContactAdapter(getApplicationContext(), contactDao.getAllContacts());
+        //new ChatsAdapter(getApplicationContext(),null);
+        //new ContactAdapter(getApplicationContext());
     }
 
 
@@ -119,14 +100,14 @@ public class SetContactActivity extends AppCompatActivity {
         int lastNameLength = contact.getName().length();
         contact.setName(etContactName.getText().toString());
         contact.setImagePath(imagePath);
-        contactDao.update(contact);
+        db.getContactDao().update(contact);
 
-        Chat chat = chatDao.getChatFromID(contact.getContactID());
+        Chat chat = db.getChatDao().getChatFromID(contact.getContactID());
         chat.setSender(contact.getName());
         chat.setImagePath(contact.getImagePath());
         chat.setLastMessage(contact.getName() + chat.getLastMessage().substring(lastNameLength));
-        chatDao.update(chat);
-
+        db.getChatDao().update(chat);
+        db = null;
         finish();
 
     }
@@ -139,14 +120,14 @@ public class SetContactActivity extends AppCompatActivity {
             contact.setName(etContactName.getText().toString());
             contact.setContactID(UUID.randomUUID().toString());
             contact.setImagePath(imagePath);
-            contactDao.insert(contact);
+            db.getContactDao().insert(contact);
 
             Chat chat = new Chat();
             chat.setLastMessage(contact.getName() + ": Hi");
             chat.setSender(contact.getName());
             chat.setImagePath(contact.getImagePath());
             chat.setChatID(contact.getContactID());
-            chatDao.insert(chat);
+            db.getChatDao().insert(chat);
 
             Message message = new Message();
 
@@ -155,8 +136,8 @@ public class SetContactActivity extends AppCompatActivity {
             message.setInitialLength(0);
             message.setType("1");
             message.setText(chat.getLastMessage().substring(2+chat.getSender().length()));
-            messageDao.insert(message);
-
+            db.getMessageDao().insert(message);
+            db = null;
             finish();
         }
     }
@@ -189,12 +170,12 @@ public class SetContactActivity extends AppCompatActivity {
 
         File file = wrapper.getDir("Images", MODE_PRIVATE);
         file = new File(file, UUID.randomUUID().toString()+".jpg");
-
+        Log.i(TAG, "saveImage1: " + file.length());
         try{
             OutputStream stream = null;
             stream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG,15,stream);
-            Log.i(TAG, "saveImage: " + file.length());
+            bitmap.compress(Bitmap.CompressFormat.JPEG,5,stream);
+            Log.i(TAG, "saveImage2: " + file.length());
             stream.flush();
             stream.close();
 
@@ -210,9 +191,12 @@ public class SetContactActivity extends AppCompatActivity {
         editImage.setImageURI(savedImageURI);
         imagePath = file.getAbsolutePath();
         file = null;
+        bitmap = null;
+        wrapper = null;
+        drawable = null;
     }
     private void saveImage(){
-        editImage.setImageResource(R.drawable.ic_baseline_account_circle_24);
+        //editImage.setImageResource(R.drawable.ic_baseline_account_circle_24);
         Drawable drawable = editImage.getDrawable();
 
         Bitmap bitmap = takeBitmap(drawable);
@@ -242,6 +226,9 @@ public class SetContactActivity extends AppCompatActivity {
         editImage.setImageURI(savedImageURI);
         imagePath = file.getAbsolutePath();
         file = null;
+        bitmap = null;
+        wrapper = null;
+        drawable = null;
     }
 
     private Bitmap takeBitmap(Drawable drawable) {

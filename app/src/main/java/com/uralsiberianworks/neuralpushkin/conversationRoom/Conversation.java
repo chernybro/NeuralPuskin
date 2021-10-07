@@ -43,30 +43,25 @@ public class Conversation extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ConversationAdapter mAdapter;
     private EditText mText;
-    private MessageDao messageDao;
-    private ContactDao contactDao;
-    private ChatDao chatDao;
+    private NeuralDatabase db;
     public static final String URL = "http://46.17.97.44:5000";
     private static final String TAG = "Conversation";
     private PushkinApi pushkinApi;
-    private String id;
+    private Button send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_conversation);
-        NeuralDatabase db = ((NeuralApp) getApplication()).getDb();
-        messageDao = db.getMessageDao();
-        contactDao = db.getContactDao();
-        chatDao = db.getChatDao();
+        db = ((NeuralApp) getApplication()).getDb();
 
         Bundle arguments = getIntent().getExtras();
-        id = arguments.get("chat_id").toString();
+        int position = arguments.getInt("position");
+        String id = db.getChatDao().getAllChats().get(position).getChatID();
+        //id = arguments.get("chat_id").toString();
 
-        Contact contact = contactDao.getContact(id);
+        Contact contact = db.getContactDao().getContact(id);
         String recipientImagePath = contact.getImagePath();
-
-
 
         TextView nameTab = findViewById(R.id.name_tab);
         nameTab.setText(contact.getName());
@@ -99,9 +94,10 @@ public class Conversation extends AppCompatActivity {
             if(mRecyclerView.getAdapter().getItemCount()>=1)
             mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
         }, 1));
-        Button send = (Button) findViewById(R.id.bt_send);
+        send = (Button) findViewById(R.id.bt_send);
+
         send.setOnClickListener(view -> {
-            if (!mText.getText().equals("")) {
+            if (!mText.getText().toString().equals("")) {
                 List<Message> data = new ArrayList<>();
 
                 String enteredText = setUserMessage(data, id);
@@ -109,7 +105,7 @@ public class Conversation extends AppCompatActivity {
                 configureNetwork();
 
                 Message message = setTypingMessage(data, id);
-
+                send.setEnabled(false);
                 setBotMessage(data, id, enteredText, message);
 
             }
@@ -121,24 +117,29 @@ public class Conversation extends AppCompatActivity {
         call.enqueue(new Callback<PushkinResponse>() {
             @Override
             public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
-                Message message1 = new Message();
-                message1.setType("1");
-                String responseText = response.body().getText();
-                message1.setText(responseText);
-                message1.setChatID(id);
-                message1.setMessageID(String.valueOf(UUID.randomUUID()));
-                message1.setInitialLength(enteredText.length());
-                data.add(message1);
-                Chat chat = chatDao.getChatFromID(id);
-                chat.setLastMessage(contactDao.getContact(id).getName() + ": " + message1.getText());
-                chatDao.update(chat);
-                mAdapter.addItem(data);
-                messageDao.insert(message1);
-                mAdapter.delItem(typingMessage);
-                messageDao.delete(typingMessage);
-                mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
-                Log.d(TAG, "onResponse: " + response.toString());
 
+                if (response.message().equals("OK"))
+                {
+                    Message message1 = new Message();
+                    message1.setType("1");
+                    String responseText = response.body().getText();
+                    message1.setText(responseText);
+                    message1.setChatID(id);
+                    message1.setMessageID(String.valueOf(UUID.randomUUID()));
+                    message1.setInitialLength(enteredText.length());
+                    data.add(message1);
+                    Chat chat = db.getChatDao().getChatFromID(id);
+                    chat.setLastMessage(db.getContactDao().getContact(id).getName() + ": " + message1.getText());
+                    db.getChatDao().update(chat);
+                    mAdapter.addItem(data);
+                    db.getMessageDao().insert(message1);
+                    mAdapter.delItem(typingMessage);
+                    db.getMessageDao().delete(typingMessage);
+                    mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
+                }
+
+                Log.d(TAG, "onResponse: " + response.toString());
+                send.setEnabled(true);
             }
 
             @Override
@@ -158,9 +159,10 @@ public class Conversation extends AppCompatActivity {
                             messageDao.insert(message1);
                             mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);*/
                 mAdapter.delItem(typingMessage);
-                messageDao.delete(typingMessage);
+                db.getMessageDao().delete(typingMessage);
                 Log.d(TAG, "onResponse: " + t.getMessage());
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                send.setEnabled(true);
             }
         });
 
@@ -180,10 +182,10 @@ public class Conversation extends AppCompatActivity {
             message.setInitialLength(enteredText.length());
             data.add(message);
             mAdapter.addItem(data);
-            messageDao.insert(message);
-            Chat chat = chatDao.getChatFromID(id);
+            db.getMessageDao().insert(message);
+            Chat chat = db.getChatDao().getChatFromID(id);
             chat.setLastMessage("Вы: " + message.getText());
-            chatDao.update(chat);
+            db.getChatDao().update(chat);
             data.clear();
             mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
             return enteredText;
@@ -198,11 +200,11 @@ public class Conversation extends AppCompatActivity {
         String typingMessageID = String.valueOf(UUID.randomUUID());
         message.setMessageID(typingMessageID);
 
-        message.setText(contactDao.getContact(id).getName() + " typing...");
+        message.setText(db.getContactDao().getContact(id).getName() + " typing...");
         message.setInitialLength(0);
         data.add(message);
         mAdapter.addItem(data);
-        messageDao.insert(message);
+        db.getMessageDao().insert(message);
         data.clear();
         mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
         return message;
@@ -240,6 +242,6 @@ public class Conversation extends AppCompatActivity {
     }
 
     public List<Message> setChatData(String id){
-        return messageDao.getAllMessages(id);
+        return db.getMessageDao().getAllMessages(id);
     }
 }

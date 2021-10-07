@@ -17,9 +17,11 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.uralsiberianworks.neuralpushkin.NeuralApp;
 import com.uralsiberianworks.neuralpushkin.SetContactActivity;
 import com.uralsiberianworks.neuralpushkin.R;
 import com.uralsiberianworks.neuralpushkin.database.Contact;
+import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
 import java.io.File;
 import java.util.List;
@@ -31,16 +33,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private final Context mContext;
     private static final String CONTACT_DEL = "contact_del";
     private static final String CONTACT_EDIT = "contact_edit";
+    private NeuralDatabase db;
 
 
-    public ContactAdapter(Context context, List<Contact> mArrayList) {
+    public ContactAdapter(Context context) {
         this.mContext = context;
-        this.mArrayList = mArrayList;
+        db = ((NeuralApp) context.getApplicationContext()).getDb();
+        this.mArrayList = db.getContactDao().getAllContacts();
         notifyDataSetChanged();
     }
 
-    public void update(List<Contact> arrayList) {
-        this.mArrayList = arrayList;
+    public void update() {
+        mArrayList.clear();
+        mArrayList = db.getContactDao().getAllContacts();
         notifyDataSetChanged();
     }
 
@@ -68,6 +73,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 Log.i("TAG", "saveImage: " + imgFile.length());
                 viewHolder.userPhoto.setImageBitmap(myBitmap);
+                imgFile = null;
+                myBitmap = null;
+                recipientImagePath = null;
             }
         }
 
@@ -81,9 +89,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 new AlertDialog.Builder(mContext)
                         .setMessage("Are you sure you want to delete this contact?")
                         .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                            mArrayList.remove(position);
-                            mContext.startActivity(intent);
-                            notifyDataSetChanged();
+                            //mArrayList.remove(position);
+                            db.getContactDao().del(id);
+                            //mContext.startActivity(intent);
+                            update();
                         })
                         .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
                         }).show();
@@ -97,6 +106,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             Intent intent1 = new Intent(mContext, SetContactActivity.class);
             intent1.putExtra(CONTACT_EDIT, id);
             mContext.startActivity(intent1);
+            update();
         }
         });
     }
