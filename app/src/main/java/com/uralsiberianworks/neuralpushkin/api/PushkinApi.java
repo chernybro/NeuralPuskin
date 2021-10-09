@@ -6,9 +6,9 @@ import retrofit2.http.Query;
 
 public interface PushkinApi {
 
-    @GET("http://46.17.97.44:5000/push/")
+    @GET("http://**************/push/")
     Call<PushkinResponse> getPushkinExcerption(@Query("text") String text, @Query("temp") double temp, @Query("length") int length);
 
-    @GET("http://46.17.97.44:5001/stih/")
+    @GET("http://**************/stih/")
     Call<PushkinResponse> getPushkinPoem(@Query("name") String name, @Query("temp") double temp, @Query("length") int length);
 }

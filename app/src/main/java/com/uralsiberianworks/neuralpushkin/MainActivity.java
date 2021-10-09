@@ -24,7 +24,6 @@ import com.uralsiberianworks.neuralpushkin.chatsRoom.FragmentChats;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    public static final String URL = "http://46.17.97.44:5000";
     private static final String TAG = "MainActivity";
     private DrawerLayout drawer;
     private Fragment mFragmentToSet;
