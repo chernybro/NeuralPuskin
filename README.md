@@ -2,8 +2,8 @@
 Приложение для удобного взаимодействия с API, которое генерирует тексты на основе полученного текста. Нейросеть обучалась по текстам Александра Сергеевича Пушкина.
 Когда бэкенд будет дописан, в приложение появиться возможность добавлять факты о собеседнике, и текст будет генерироваться с учетом этих фактов и общего контекста переписки.
 
-Почитать о генерирующей текст нейросети можно [сайте](https://tproger.ru/news/neural-pushkin-generiruet-tekst-na-russkomu-v-stile-pushkina-pri-pomoshhi-nejrosetej-teper-proekt-dostupen-dlja-vseh/)
-, [здесь](https://vc.ru/ml/275540-daydzhest-novostey-iskusstvennogo-intellekta-i-mashinnogo-obucheniya-za-iyul), и [тут](https://www.exploit.media/note/how-to-confess-your-love-in-pushkin-style/). 
+Почитать о генерирующей текст нейросети можно [tproger'e](https://tproger.ru/news/neural-pushkin-generiruet-tekst-na-russkomu-v-stile-pushkina-pri-pomoshhi-nejrosetej-teper-proekt-dostupen-dlja-vseh/)
+, [vc](https://vc.ru/ml/275540-daydzhest-novostey-iskusstvennogo-intellekta-i-mashinnogo-obucheniya-za-iyul), и [exploit](https://www.exploit.media/note/how-to-confess-your-love-in-pushkin-style/). 
 
 # Из чего состоит
 * Состоит из двух фрагментов, "*Контакты*" и "*Сообщения*", и двух активностей - "*Добавление пользователя*" и "*Чат*". 
