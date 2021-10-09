@@ -19,7 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-
+import com.uralsiberianworks.neuralpushkin.chatsRoom.ChatsAdapter;
+import com.uralsiberianworks.neuralpushkin.contactsRoom.ContactAdapter;
 import com.uralsiberianworks.neuralpushkin.database.Chat;
 import com.uralsiberianworks.neuralpushkin.database.Contact;
 import com.uralsiberianworks.neuralpushkin.database.Message;
@@ -55,8 +56,8 @@ public class SetContactActivity extends AppCompatActivity {
             Bundle arguments = getIntent().getExtras();
             id = arguments.get("contact_edit").toString();
             if (!id.equals("0")) {
-                Contact contact = db.contactDao.getContact(id);
-                String path = contact.imagePath;
+                Contact contact = db.getContactDao().getContact(id);
+                String path = contact.getImagePath();
                 if (!path.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
                     File imgFile = new File(path);
 
@@ -69,7 +70,7 @@ public class SetContactActivity extends AppCompatActivity {
                         myBitmap = null;
                     }
                 } else saveImage();
-                etContactName.setText(contact.name);
+                etContactName.setText(contact.getName());
                 imageListener();
                 addContactButtonListener(contact);
             }
@@ -96,16 +97,16 @@ public class SetContactActivity extends AppCompatActivity {
     }
 
     private void updateContact(Contact contact) {
-        int lastNameLength = contact.name.length();
-        contact.name = etContactName.getText().toString();
-        contact.imagePath = imagePath;
-        db.contactDao.update(contact);
+        int lastNameLength = contact.getName().length();
+        contact.setName(etContactName.getText().toString());
+        contact.setImagePath(imagePath);
+        db.getContactDao().update(contact);
 
-        Chat chat = db.chatDao.getChatFromID(contact.contactID);
-        chat.sender = contact.name;
-        chat.imagePath = contact.imagePath;
-        chat.lastMessage = contact.name + chat.lastMessage.substring(lastNameLength);
-        db.chatDao.update(chat);
+        Chat chat = db.getChatDao().getChatFromID(contact.getContactID());
+        chat.setSender(contact.getName());
+        chat.setImagePath(contact.getImagePath());
+        chat.setLastMessage(contact.getName() + chat.getLastMessage().substring(lastNameLength));
+        db.getChatDao().update(chat);
         db = null;
         finish();
 
@@ -116,26 +117,26 @@ public class SetContactActivity extends AppCompatActivity {
 
 
             Contact contact = new Contact();
-            contact.name = etContactName.getText().toString();
-            contact.contactID = UUID.randomUUID().toString();
-            contact.imagePath = imagePath;
-            db.contactDao.insert(contact);
+            contact.setName(etContactName.getText().toString());
+            contact.setContactID(UUID.randomUUID().toString());
+            contact.setImagePath(imagePath);
+            db.getContactDao().insert(contact);
 
             Chat chat = new Chat();
-            chat.lastMessage = contact.name + ": Hi";
-            chat.sender = contact.name;
-            chat.imagePath = contact.imagePath;
-            chat.chatID = contact.contactID;
-            db.chatDao.insert(chat);
+            chat.setLastMessage(contact.getName() + ": Hi");
+            chat.setSender(contact.getName());
+            chat.setImagePath(contact.getImagePath());
+            chat.setChatID(contact.getContactID());
+            db.getChatDao().insert(chat);
 
             Message message = new Message();
 
-            message.messageID = String.valueOf(UUID.randomUUID());
-            message.chatID = chat.chatID;
-            message.initialLength = 0;
-            message.type = "1";
-            message.text = chat.lastMessage.substring(2+ chat.sender.length());
-            db.messageDao.insert(message);
+            message.setMessageID(String.valueOf(UUID.randomUUID()));
+            message.setChatID(chat.getChatID());
+            message.setInitialLength(0);
+            message.setType("1");
+            message.setText(chat.getLastMessage().substring(2+chat.getSender().length()));
+            db.getMessageDao().insert(message);
             db = null;
             finish();
         }
