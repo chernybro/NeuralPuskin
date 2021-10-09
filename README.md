@@ -22,4 +22,4 @@
 3. Создать класс репозиторий для получения данных в отдельном месте.
 
 ## Установка
-Чтобы опробовать приложение, установите файл [PushkinApp](https://github.com/chernybro/neuralpuskin/pushkin.apk) на ваше устройство.
+Чтобы опробовать приложение, установите файл [PushkinApp](https://github.com/chernybro/neuralpuskin/Pushkin.apk) на ваше устройство.
