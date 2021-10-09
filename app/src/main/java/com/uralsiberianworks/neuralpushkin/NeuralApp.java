@@ -8,7 +8,7 @@ import com.uralsiberianworks.neuralpushkin.database.NeuralDatabase;
 
 // Singleton
 public class NeuralApp extends Application {
-    
+
     private static NeuralDatabase db;
 
     public NeuralDatabase getDb() {
