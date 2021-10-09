@@ -23,3 +23,5 @@
 
 ## Установка
 Чтобы опробовать приложение, установите файл [PushkinApp](https://github.com/chernybro/NeuralPuskin/blob/main/Pushkin.apk) на ваше устройство.
+
+Если вы просто хотите сгенерировать тексты не используя приложение, то вы можете сделать это на [сайте](https://pushkin.monetka.name)
