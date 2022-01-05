@@ -13,8 +13,6 @@
         android:layout_marginTop="56dp"
         android:id="@+id/edit_contact_image"/>
 
-
-
     <EditText
         android:background="@drawable/rounded_shape"
         android:id="@+id/et_name_contact"
@@ -23,9 +21,24 @@
         android:layout_height="40dp"
         android:inputType="textPersonName"
         android:hint="@string/enter_name_hint"
+        android:paddingStart="8dp"
         android:maxLength="25"
         android:textColor="@color/almost_white"
         android:layout_below="@id/edit_contact_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"/>
+
+    <EditText
+        android:background="@drawable/rounded_shape"
+        android:id="@+id/et_facts_contact"
+        android:textColorHint="@color/grey"
+        android:layout_width="280dp"
+        android:layout_height="120dp"
+        android:hint="@string/enter_facts_hint"
+        android:paddingStart="8dp"
+        android:gravity="top"
+        android:textColor="@color/almost_white"
+        android:layout_below="@id/et_name_contact"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"/>
 
@@ -33,13 +46,11 @@
         android:id="@+id/add_contact_btn"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_below="@id/et_name_contact"
+        android:layout_below="@id/et_facts_contact"
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_chat_me"
         android:textColor="@color/almost_white"
         android:text="@string/add_contact_btn"
         android:layout_marginTop="32dp"/>
-
-
 
 </RelativeLayout>

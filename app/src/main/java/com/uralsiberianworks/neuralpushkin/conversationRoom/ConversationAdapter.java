@@ -68,14 +68,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 View v2 = inflater.inflate(R.layout.layout_holder_you, viewGroup, false);
                 ImageView imageView = v2.findViewById(R.id.recipient_img);
 
-                File imgFile = new File(recipientImagePath);
+                /*File imgFile = new File(recipientImagePath);
 
                 if(imgFile.exists()){
 
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
                     imageView.setImageBitmap(myBitmap);
-                }
+                }*/
                 viewHolder = new HolderMessageView(v2);
                 break;
             case ME:

@@ -37,6 +37,7 @@ public class SetContactActivity extends AppCompatActivity {
     private static final String TAG = "AddContactActivity";
     private ImageView editImage;
     private EditText etContactName;
+    private EditText etContactFacts;
     private Button addButton;
     private String imagePath;
     private NeuralDatabase db;
@@ -49,6 +50,7 @@ public class SetContactActivity extends AppCompatActivity {
 
         editImage = findViewById(R.id.edit_contact_image);
         etContactName = findViewById(R.id.et_name_contact);
+        etContactFacts = findViewById(R.id.et_facts_contact);
         addButton = findViewById(R.id.add_contact_btn);
 
         String id;
@@ -57,7 +59,7 @@ public class SetContactActivity extends AppCompatActivity {
             id = arguments.get("contact_edit").toString();
             if (!id.equals("0")) {
                 Contact contact = db.getContactDao().getContact(id);
-                String path = contact.getImagePath();
+                /*String path = contact.getImagePath();
                 if (!path.equals(Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + R.drawable.push6).toString())) {
                     File imgFile = new File(path);
 
@@ -69,14 +71,15 @@ public class SetContactActivity extends AppCompatActivity {
                         imgFile = null;
                         myBitmap = null;
                     }
-                } else saveImage();
+                } else saveImage(); */
                 etContactName.setText(contact.getName());
+                etContactFacts.setText(contact.getContactFacts().substring(6 + contact.getName().length()));
                 imageListener();
                 addContactButtonListener(contact);
             }
         } else {
 
-            saveImage();
+            //saveImage();
 
             setListeners();
         }
@@ -90,15 +93,16 @@ public class SetContactActivity extends AppCompatActivity {
         addContactButtonListener();
     }
 
-    private void addContactButtonListener() { addButton.setOnClickListener(view -> { if (!etContactName.getText().equals("")) { setNewContact(); } }); }
+    private void addContactButtonListener() { addButton.setOnClickListener(view -> { if (!etContactName.getText().equals("") && !etContactFacts.getText().equals("")) { setNewContact(); } }); }
 
     private void addContactButtonListener(Contact contact) {
-        addButton.setOnClickListener(view -> { if (!etContactName.getText().equals("")) { updateContact(contact); } });
+        addButton.setOnClickListener(view -> { if (!etContactName.getText().equals("") && !etContactFacts.getText().equals("")) { updateContact(contact); } });
     }
 
     private void updateContact(Contact contact) {
         int lastNameLength = contact.getName().length();
         contact.setName(etContactName.getText().toString());
+        contact.setContactFacts(etContactFacts.getText().toString());
         contact.setImagePath(imagePath);
         db.getContactDao().update(contact);
 
@@ -113,11 +117,13 @@ public class SetContactActivity extends AppCompatActivity {
     }
 
     private void setNewContact() {
-        if (!TextUtils.isEmpty(etContactName.getText().toString())) {
+        if (!TextUtils.isEmpty(etContactName.getText().toString()) && !TextUtils.isEmpty(etContactFacts.getText().toString())) {
 
 
             Contact contact = new Contact();
             contact.setName(etContactName.getText().toString());
+            contact.setContactFacts("I am " + etContactName.getText().toString() + "," + etContactFacts.getText().toString());
+            Log.d(TAG, "setNewContact: " + contact.getContactFacts());
             contact.setContactID(UUID.randomUUID().toString());
             contact.setImagePath(imagePath);
             db.getContactDao().insert(contact);
@@ -145,21 +151,21 @@ public class SetContactActivity extends AppCompatActivity {
 
 
     private void imageListener() {
-        editImage.setOnClickListener(view -> {
+        /*editImage.setOnClickListener(view -> {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-        });
+        });*/
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE) {
+        /*if (requestCode == PICK_IMAGE) {
             saveImage(data);
             Toast.makeText(getApplicationContext(), "image saved", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     private void saveImage(Intent data){

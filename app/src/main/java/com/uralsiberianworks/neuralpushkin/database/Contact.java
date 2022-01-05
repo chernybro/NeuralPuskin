@@ -11,11 +11,13 @@ import java.util.Objects;
 public class Contact {
     @PrimaryKey @NonNull
     private String contactID;
+    private String contactFacts;
     private String name;
     private String imagePath;
 
-    public Contact(@NonNull String contactID, String name, String imagePath) {
+    public Contact(@NonNull String contactID, String contactFacts, String name, String imagePath) {
         this.contactID = contactID;
+        this.contactFacts = contactFacts;
         this.name = name;
         this.imagePath = imagePath;
     }
@@ -44,6 +46,14 @@ public class Contact {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getContactFacts() {
+        return contactFacts;
+    }
+
+    public void setContactFacts(String contactFacts) {
+        this.contactFacts = contactFacts;
     }
 
     @Override

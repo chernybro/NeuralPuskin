@@ -71,14 +71,14 @@ public class Conversation extends AppCompatActivity {
         TextView nameTab = findViewById(R.id.name_tab);
         nameTab.setText(contact.getName());
         ImageView imgTab = findViewById(R.id.img_tab);
-        File imgFile = new File(recipientImagePath);
+        /*File imgFile = new File(recipientImagePath);
 
         if(imgFile.exists()){
 
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
             imgTab.setImageBitmap(myBitmap);
-        }
+        }*/
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -118,7 +118,7 @@ public class Conversation extends AppCompatActivity {
     private void setBotMessage(List<Message> data, String id, String enteredText, Message typingMessage) {
         String[] s = db.getMessageDao().getAllHistory(chatID).toArray(new String[0]);
         Log.d(TAG, "setBotMessage: s = " + Arrays.toString(s));
-        Call<BotResponse> call = pushkinApi.getBotResponse(new BotRequestBody(s, enteredText, 10));
+        Call<BotResponse> call = pushkinApi.getBotResponse(new BotRequestBody(s, db.getContactDao().getContact(chatID).getContactFacts(), 10));
         Log.d(TAG, "setBotMessage: " + call.request());
         Log.d(TAG, "setBotMessage: " + call.request().headers().get("candnum"));
 

@@ -35,7 +35,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
         db = ((NeuralApp) context.getApplicationContext()).getDb();
         this.mArrayList = db.getChatDao().getAllChats();
         notifyDataSetChanged();
-        createPushkin();
+        //createPushkin();
     }
 
     private void createPushkin() {
@@ -86,7 +86,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
         viewHolder.tvName.setText(mArrayList.get(position).getSender());
 
-        String recipientImagePath = mArrayList.get(position).getImagePath();
+        /*String recipientImagePath = mArrayList.get(position).getImagePath();
 
         if (!mArrayList.get(position).getChatID().equals("push")) {
              File imgFile = new File(recipientImagePath);
@@ -100,7 +100,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
             }
             imgFile = null;
 
-        }
+        }*/
 
         viewHolder.tvLastChat.setText(mArrayList.get(position).getLastMessage());
 

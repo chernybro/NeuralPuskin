@@ -64,7 +64,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public void onBindViewHolder(ContactAdapter.ViewHolder viewHolder, int position) {
 
         viewHolder.tvName.setText(mArrayList.get(position).getName());
-        String recipientImagePath = mArrayList.get(position).getImagePath();
+        /*String recipientImagePath = mArrayList.get(position).getImagePath();
         if (!mArrayList.get(position).getContactID().equals("push")) {
             File imgFile = new File(recipientImagePath);
 
@@ -77,7 +77,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 myBitmap = null;
                 recipientImagePath = null;
             }
-        }
+        }*/
 
         String id = mArrayList.get(position).getContactID();
 
