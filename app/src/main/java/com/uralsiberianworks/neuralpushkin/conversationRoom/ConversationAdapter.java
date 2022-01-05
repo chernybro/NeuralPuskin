@@ -119,15 +119,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void configureViewHolderMe(HolderMessageView vh1, int position) {
-        vh1.getChatText().setText(items.get(position).getText());
+        vh1.getChatText().setText(items.get(position).getText().substring(7));
     }
 
     private void configureViewHolderYou(HolderMessageView vh1, int position) {
-        final SpannableStringBuilder sb = new SpannableStringBuilder(items.get(position).getText());
-        final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(158, 158, 158));
-        int colorLength = items.get(position).getInitialLength();
-        sb.setSpan(fcs, 0, colorLength, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        vh1.getChatText().setText(sb);
+        //final SpannableStringBuilder sb = new SpannableStringBuilder(items.get(position).getText().substring(4));
+        //final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(158, 158, 158));
+        //int colorLength = items.get(position).getInitialLength();
+        //sb.setSpan(fcs, 0, colorLength, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        vh1.getChatText().setText(items.get(position).getText().substring(4));
     }
 
     private void configureViewHolderTyping(HolderMessageView vh1, int position) {

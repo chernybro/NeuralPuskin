@@ -135,7 +135,7 @@ public class SetContactActivity extends AppCompatActivity {
             message.setChatID(chat.getChatID());
             message.setInitialLength(0);
             message.setType("1");
-            message.setText(chat.getLastMessage().substring(2+chat.getSender().length()));
+            message.setText("Bot:" + chat.getLastMessage().substring(2+chat.getSender().length()));
             db.getMessageDao().insert(message);
             db = null;
             finish();

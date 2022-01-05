@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.uralsiberianworks.neuralpushkin.NeuralApp;
 import com.uralsiberianworks.neuralpushkin.R;
+import com.uralsiberianworks.neuralpushkin.api.BotRequestBody;
+import com.uralsiberianworks.neuralpushkin.api.BotResponse;
 import com.uralsiberianworks.neuralpushkin.api.PushkinApi;
 import com.uralsiberianworks.neuralpushkin.database.Chat;
 import com.uralsiberianworks.neuralpushkin.database.ChatDao;
@@ -29,6 +31,7 @@ import com.uralsiberianworks.neuralpushkin.api.PushkinResponse;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,19 +51,21 @@ public class Conversation extends AppCompatActivity {
     private static final String TAG = "Conversation";
     private PushkinApi pushkinApi;
     private Button send;
+    private String chatID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_conversation);
+        configureNetwork();
         db = ((NeuralApp) getApplication()).getDb();
 
         Bundle arguments = getIntent().getExtras();
         int position = arguments.getInt("position");
-        String id = db.getChatDao().getAllChats().get(position).getChatID();
+        chatID = db.getChatDao().getAllChats().get(position).getChatID();
         //id = arguments.get("chat_id").toString();
 
-        Contact contact = db.getContactDao().getContact(id);
+        Contact contact = db.getContactDao().getContact(chatID);
         String recipientImagePath = contact.getImagePath();
 
         TextView nameTab = findViewById(R.id.name_tab);
@@ -82,7 +87,7 @@ public class Conversation extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new ConversationAdapter(setChatData(id), recipientImagePath);
+        mAdapter = new ConversationAdapter(setChatData(chatID), recipientImagePath);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.postDelayed(() -> {
             if(mRecyclerView.getAdapter().getItemCount()>=1)
@@ -100,29 +105,33 @@ public class Conversation extends AppCompatActivity {
             if (!mText.getText().toString().equals("")) {
                 List<Message> data = new ArrayList<>();
 
-                String enteredText = setUserMessage(data, id);
+                String enteredText = setUserMessage(data, chatID);
 
-                configureNetwork();
-
-                Message message = setTypingMessage(data, id);
+                Message message = setTypingMessage(data, chatID);
                 send.setEnabled(false);
-                setBotMessage(data, id, enteredText, message);
+                setBotMessage(data, chatID, enteredText, message);
 
             }
         });
     }
 
     private void setBotMessage(List<Message> data, String id, String enteredText, Message typingMessage) {
-        Call<PushkinResponse> call = pushkinApi.getPushkinExcerption(enteredText, 1, 120);
-        call.enqueue(new Callback<PushkinResponse>() {
+        String[] s = db.getMessageDao().getAllHistory(chatID).toArray(new String[0]);
+        Log.d(TAG, "setBotMessage: s = " + Arrays.toString(s));
+        Call<BotResponse> call = pushkinApi.getBotResponse(new BotRequestBody(s, enteredText, 10));
+        Log.d(TAG, "setBotMessage: " + call.request());
+        Log.d(TAG, "setBotMessage: " + call.request().headers().get("candnum"));
+
+
+        call.enqueue(new Callback<BotResponse>() {
             @Override
-            public void onResponse(Call<PushkinResponse> call, retrofit2.Response<PushkinResponse> response) {
+            public void onResponse(Call<BotResponse> call, retrofit2.Response<BotResponse> response) {
 
                 if (response.message().equals("OK"))
                 {
                     Message message1 = new Message();
                     message1.setType("1");
-                    String responseText = response.body().getText();
+                    String responseText = response.body().getAnswer();
                     message1.setText(responseText);
                     message1.setChatID(id);
                     message1.setMessageID(String.valueOf(UUID.randomUUID()));
@@ -134,16 +143,15 @@ public class Conversation extends AppCompatActivity {
                     mAdapter.addItem(data);
                     db.getMessageDao().insert(message1);
                     mAdapter.delItem(typingMessage);
-                    db.getMessageDao().delete(typingMessage);
                     mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
                 }
-
+                Log.d(TAG, "REQUEST: " + call.request());
                 Log.d(TAG, "onResponse: " + response.toString());
                 send.setEnabled(true);
             }
 
             @Override
-            public void onFailure(Call<PushkinResponse> call, Throwable t) {
+            public void onFailure(Call<BotResponse> call, Throwable t) {
                             /*Message message1 = new Message();
                             message1.setType("1");
                             String responseText = "Привет! Это мой дефолтный ответ";
@@ -159,7 +167,7 @@ public class Conversation extends AppCompatActivity {
                             messageDao.insert(message1);
                             mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);*/
                 mAdapter.delItem(typingMessage);
-                db.getMessageDao().delete(typingMessage);
+                Log.d(TAG, "onFailure: " + call.request());
                 Log.d(TAG, "onResponse: " + t.getMessage());
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 send.setEnabled(true);
@@ -178,8 +186,8 @@ public class Conversation extends AppCompatActivity {
         message.setMessageID(String.valueOf(UUID.randomUUID()));
         String enteredText = mText.getText().toString();
         if (!TextUtils.isEmpty(enteredText)) {
-            message.setText(enteredText);
-            message.setInitialLength(enteredText.length());
+            message.setText("Person:" + enteredText);
+            message.setInitialLength(enteredText.length() - 7);
             data.add(message);
             mAdapter.addItem(data);
             db.getMessageDao().insert(message);
@@ -204,7 +212,6 @@ public class Conversation extends AppCompatActivity {
         message.setInitialLength(0);
         data.add(message);
         mAdapter.addItem(data);
-        db.getMessageDao().insert(message);
         data.clear();
         mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
         return message;

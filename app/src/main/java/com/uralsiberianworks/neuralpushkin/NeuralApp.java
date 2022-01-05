@@ -26,7 +26,5 @@ public class NeuralApp extends Application {
                 NeuralDatabase.class, "database")
                 .allowMainThreadQueries()
                 .build();
-
-
     }
 }

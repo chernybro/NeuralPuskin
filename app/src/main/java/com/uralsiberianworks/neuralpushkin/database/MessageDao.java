@@ -13,9 +13,11 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE chatID = :chatID")
     List<Message> getAllMessages(String chatID);
 
+    @Query("SELECT text FROM message WHERE chatID = :chatID")
+    List<String> getAllHistory(String chatID);
+
     @Insert
     void insert(Message message);
-
 
     @Delete
     void delete(Message message);
