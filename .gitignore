@@ -12,3 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/src/main/java/com/uralsiberianworks/neuralpushkin/api/PushkinApi.java
