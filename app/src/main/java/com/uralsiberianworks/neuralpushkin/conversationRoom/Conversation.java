@@ -129,6 +129,7 @@ public class Conversation extends AppCompatActivity {
 
                 if (response.message().equals("OK"))
                 {
+                    // /fd f d
                     Message message1 = new Message();
                     message1.setType("1");
                     String responseText = response.body().getAnswer();
